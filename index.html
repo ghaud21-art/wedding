@@ -210,7 +210,8 @@
   /* === Location === */
   .location { background: var(--cream); text-align: center; }
   .location-venue { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--text-primary); margin-bottom: 4px; font-weight: 400; }
-  .location-address { font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.6; }
+  .location-address { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; line-height: 1.6; }
+  .location-tel { font-size: 13px; color: var(--sage-500); margin-bottom: 24px; font-weight: 400; }
   .map-placeholder {
     width: 100%; height: 200px; background: linear-gradient(135deg, var(--sage-100), var(--highlight-green));
     border-radius: 16px; display: flex; align-items: center; justify-content: center;
@@ -494,12 +495,15 @@
       <div class="section-divider"><span class="leaf-icon">☘️</span></div>
       <div class="section-label">예식장 정보</div>
       <div class="location-venue">경기교총웨딩하우스</div>
-      <div class="location-address">경기도 수원시<br>(상세 주소 추후 입력)</div>
-      <div class="map-placeholder">🗺️ 카카오맵 지도 임베드 영역</div>
+      <div class="location-address">경기도 수원시 팔달구 팔달산로 89-13<br>(고등동, 경기교총회관)</div>
+      <div class="location-tel">☎ 031-256-0700</div>
+      <div style="width:100%; border-radius:16px; overflow:hidden; margin-bottom:16px; border:1px solid var(--border-light);">
+        <iframe src="https://map.kakao.com/link/map/경기교총웨딩하우스,37.2636,127.0286" width="100%" height="250" frameborder="0" style="border:0; display:block;" allowfullscreen></iframe>
+      </div>
       <div class="map-buttons">
-        <button class="map-btn" onclick="openMap('kakao')">카카오맵</button>
-        <button class="map-btn" onclick="openMap('naver')">네이버지도</button>
-        <button class="map-btn" onclick="openMap('tmap')">티맵</button>
+        <button class="map-btn" onclick="openMap('kakao')">🗺️ 카카오맵</button>
+        <button class="map-btn" onclick="openMap('naver')">🟢 네이버지도</button>
+        <button class="map-btn" onclick="openMap('tmap')">🚗 티맵</button>
       </div>
     </section>
 
@@ -508,16 +512,16 @@
       <div class="section-divider"><span class="leaf-icon">☘️</span></div>
       <div class="section-label">오시는 길</div>
       <div class="info-card">
-        <div class="info-card-title">🚇 지하철</div>
-        <div class="info-detail">7호선 청담역 2번출구<br>도보 5분</div>
+        <div class="info-card-title">🚇 지하철 + 셔틀버스</div>
+        <div class="info-detail">1호선 수원역 하차<br>지하상가 3번 출구 앞<br>셔틀버스 10분 간격 운행</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">🚌 버스</div>
+        <div class="info-detail">화서사거리, 병무청입구<br>정류장 하차</div>
       </div>
       <div class="info-card">
         <div class="info-card-title">🚗 자가용</div>
-        <div class="info-detail">건물 내 지하주차장 이용<br>2시간 무료주차</div>
-      </div>
-      <div class="info-card">
-        <div class="info-card-title">🚌 전세버스</div>
-        <div class="info-detail">수원역 12:00 출발<br>참석여부에서 탑승 신청</div>
+        <div class="info-detail">네비게이션 "경기도청후문" 검색<br>또는 "수원시 팔달구 고등동 42-98"<br>주차 700대 가능 (무료)</div>
       </div>
     </section>
 
