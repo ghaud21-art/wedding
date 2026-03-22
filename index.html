@@ -19,7 +19,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
 
 <!-- Kakao Maps SDK -->
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b8fa62b88b61abad097e3eae4bd313f"></script>
+<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=0b8fa62b88b61abad097e3eae4bd313f&autoload=false"></script>
 
 <style>
   :root {
@@ -910,34 +910,35 @@
 
   // === 카카오맵 초기화 ===
   function initKakaoMap() {
-    var mapContainer = document.getElementById('kakaoMap');
-    if (!mapContainer || typeof kakao === 'undefined') return;
+    if (typeof kakao === 'undefined' || !kakao.maps) return;
     
-    var position = new kakao.maps.LatLng(37.2794, 126.9966);
-    var map = new kakao.maps.Map(mapContainer, {
-      center: position,
-      level: 4
-    });
+    kakao.maps.load(function() {
+      var mapContainer = document.getElementById('kakaoMap');
+      if (!mapContainer) return;
 
-    // 마커
-    var marker = new kakao.maps.Marker({
-      position: position,
-      map: map
-    });
+      var position = new kakao.maps.LatLng(37.2794, 126.9966);
+      var map = new kakao.maps.Map(mapContainer, {
+        center: position,
+        level: 4
+      });
 
-    // 인포윈도우
-    var infowindow = new kakao.maps.InfoWindow({
-      content: '<div style="padding:8px 12px;font-size:13px;font-family:Noto Sans KR,sans-serif;white-space:nowrap;">☘️ <b>경기교총웨딩하우스</b></div>'
-    });
-    infowindow.open(map, marker);
+      var marker = new kakao.maps.Marker({
+        position: position,
+        map: map
+      });
 
-    // 지도 컨트롤
-    map.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
+      var infowindow = new kakao.maps.InfoWindow({
+        content: '<div style="padding:8px 12px;font-size:13px;font-family:Noto Sans KR,sans-serif;white-space:nowrap;">☘️ <b>경기교총웨딩하우스</b></div>'
+      });
+      infowindow.open(map, marker);
+
+      map.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
+    });
   }
 
-  // 카카오맵 SDK 로드 후 초기화
+  // 페이지 로드 후 카카오맵 초기화
   window.addEventListener('load', function() {
-    setTimeout(initKakaoMap, 500);
+    initKakaoMap();
   });
 
   function openKakaoPay() { showToast('카카오페이 연동 예정'); }
