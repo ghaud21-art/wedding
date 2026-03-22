@@ -527,8 +527,6 @@
       <div class="section-divider"><span class="leaf-icon">☘️</span></div>
       <div class="section-label">예식장 정보</div>
       <div class="location-venue">경기교총웨딩하우스</div>
-      <div class="location-address">경기도 수원시 팔달구 팔달산로 89-13<br>(고등동, 경기교총회관)</div>
-      <div class="location-tel">☎ 031-256-0700</div>
       <div id="daumRoughmapContainer1774174897196" class="root_daum_roughmap root_daum_roughmap_landing" style="width:100%; border-radius:16px; overflow:hidden; margin-bottom:12px;"></div>
       <button class="map-btn" style="width:100%; margin-bottom:16px; padding:12px;" onclick="navigator.clipboard.writeText('경기도 수원시 팔달구 팔달산로 89-13').then(function(){showToast('주소가 복사되었습니다')})">📋 주소 복사하기</button>
       <div class="map-buttons">
@@ -612,18 +610,16 @@
       <div class="account-group">
         <button class="account-toggle" onclick="toggleAccount(this)">신랑측 계좌번호 <span class="arrow">▼</span></button>
         <div class="account-details">
-          <div class="account-item"><div class="account-info"><div class="account-bank">○○은행 (김인환)</div><div class="account-number">000-000-000000</div></div><button class="copy-btn" onclick="copyAccount('000-000-000000')">복사</button></div>
-          <div class="account-item"><div class="account-info"><div class="account-bank">○○은행 (아버지 김○○)</div><div class="account-number">000-000-000000</div></div><button class="copy-btn" onclick="copyAccount('000-000-000000')">복사</button></div>
+          <div class="account-item"><div class="account-info"><div class="account-bank">카카오뱅크 (김인환)</div><div class="account-number">3333-0213-50218</div></div><button class="copy-btn" onclick="copyAccount('3333021350218')">복사</button></div>
         </div>
       </div>
       <div class="account-group">
         <button class="account-toggle" onclick="toggleAccount(this)">신부측 계좌번호 <span class="arrow">▼</span></button>
         <div class="account-details">
-          <div class="account-item"><div class="account-info"><div class="account-bank">○○은행 (박진희)</div><div class="account-number">000-000-000000</div></div><button class="copy-btn" onclick="copyAccount('000-000-000000')">복사</button></div>
-          <div class="account-item"><div class="account-info"><div class="account-bank">○○은행 (아버지 박○○)</div><div class="account-number">000-000-000000</div></div><button class="copy-btn" onclick="copyAccount('000-000-000000')">복사</button></div>
+          <div class="account-item"><div class="account-info"><div class="account-bank">신한은행 (박진희)</div><div class="account-number">110-536-795109</div></div><button class="copy-btn" onclick="copyAccount('110536795109')">복사</button></div>
         </div>
       </div>
-      <button class="kakao-pay-btn" onclick="openKakaoPay()">💛 카카오페이로 축하하기</button>
+      <button class="kakao-pay-btn" onclick="window.open('https://qr.kakaopay.com/Ej8aV6pAJ','_blank')">💛 카카오페이로 축하하기</button>
     </section>
 
     <!-- GUEST SNAP -->
@@ -916,7 +912,6 @@
     "mapHeight": "300"
   }).render();
 
-  function openKakaoPay() { showToast('카카오페이 연동 예정'); }
   function shareKakao() { showToast('카카오톡 공유 (JS SDK 연동 예정)'); }
   function copyLink() { navigator.clipboard.writeText(window.location.href).then(function() { showToast('링크가 복사되었습니다'); }); }
 
