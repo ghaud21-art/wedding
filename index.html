@@ -22,7 +22,7 @@
 <script charset="UTF-8" src="https://ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js"></script>
 
 <!-- Kakao JS SDK (공유 기능) -->
-<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js" integrity="sha384-DKYJZ8NLiK8MN4/C5P2dtSmLQ4KwPaoqAfyA/DfmEc1VDxu4kykhLT2Hmzp4u2K" crossorigin="anonymous"></script>
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js" crossorigin="anonymous"></script>
 
 <style>
   :root {
@@ -562,17 +562,12 @@
       <div class="section-divider"><span class="leaf-icon">☘️</span></div>
       <div class="section-label">갤러리</div>
       <div class="gallery-tabs">
-        <button class="gallery-tab active" onclick="switchTab(this)">스튜디오</button>
-        <button class="gallery-tab" onclick="switchTab(this)">야외</button>
-        <button class="gallery-tab" onclick="switchTab(this)">캐주얼</button>
+        <button class="gallery-tab active" onclick="loadGallery('2026', this)">2026</button>
+        <button class="gallery-tab" onclick="loadGallery('2025', this)">2025</button>
+        <button class="gallery-tab" onclick="loadGallery('2024', this)">~ 2024</button>
       </div>
-      <div class="gallery-grid">
-        <div class="gallery-item"><span>photo</span></div>
-        <div class="gallery-item"><span>photo</span></div>
-        <div class="gallery-item"><span>photo</span></div>
-        <div class="gallery-item"><span>photo</span></div>
-        <div class="gallery-item"><span>photo</span></div>
-        <div class="gallery-item"><span>photo</span></div>
+      <div class="gallery-grid" id="galleryGrid">
+        <div class="gallery-item"><span>사진을 불러오는 중...</span></div>
       </div>
     </section>
 
@@ -737,9 +732,35 @@
   }, { threshold: 0.15 });
   document.querySelectorAll('.fade-in').forEach(function(el) { fadeObserver.observe(el); });
 
-  function switchTab(el) {
+  function loadGallery(year, btnEl) {
+    // 탭 활성화
     document.querySelectorAll('.gallery-tab').forEach(function(t) { t.classList.remove('active'); });
-    el.classList.add('active');
+    if (btnEl) btnEl.classList.add('active');
+
+    var grid = document.getElementById('galleryGrid');
+    grid.innerHTML = '<div class="gallery-item" style="grid-column:1/-1;aspect-ratio:auto;padding:40px;"><span>사진을 불러오는 중...</span></div>';
+
+    apiGet('getGallery&year=' + encodeURIComponent(year))
+      .then(function(photos) {
+        grid.innerHTML = '';
+        if (!photos || !photos.length) {
+          grid.innerHTML = '<div class="gallery-item" style="grid-column:1/-1;aspect-ratio:auto;padding:40px;"><span>아직 사진이 없어요 ☘️</span></div>';
+          return;
+        }
+        photos.forEach(function(photo) {
+          var div = document.createElement('div');
+          div.className = 'gallery-item';
+          div.style.backgroundImage = 'url(' + photo.thumbnailUrl + ')';
+          div.style.backgroundSize = 'cover';
+          div.style.backgroundPosition = 'center';
+          div.style.cursor = 'pointer';
+          div.onclick = function() { openLightbox(photo.fullUrl, photo.name); };
+          grid.appendChild(div);
+        });
+      })
+      .catch(function() {
+        grid.innerHTML = '<div class="gallery-item" style="grid-column:1/-1;aspect-ratio:auto;padding:40px;"><span>불러오기 실패</span></div>';
+      });
   }
 
   function toggleAccount(btn) { btn.classList.toggle('open'); btn.nextElementSibling.classList.toggle('open'); }
@@ -752,7 +773,7 @@
   }
 
   // ★ GAS 웹앱 배포 URL을 여기에 붙여넣으세요
-  var GAS_API_URL = 'https://script.google.com/macros/s/AKfycbxqsTpHeK1RlbwQqkDXYYaJsIbbJt25cv-Pao4-kWJxrQY7nWH8IZMpzs1V1M6qB7uX/exec';
+  var GAS_API_URL = 'https://script.google.com/macros/s/AKfycbxQFjzdISXxoU3NRC9GGCq9GvW2aMh-cDYcCwRSCx-8XCtikAtKTPIBjya_l9jIItuz/exec';
 
   // === API 호출 헬퍼 ===
   function apiGet(action) {
@@ -905,6 +926,7 @@
   window.addEventListener('load', function() {
     loadGuestbook();
     loadGuestPhotos();
+    loadGallery('2026', null);
   });
 
   // === 카카오맵 (지도 퍼가기) ===
@@ -916,15 +938,26 @@
   }).render();
 
   // === 카카오톡 공유 ===
-  // Kakao SDK 초기화
-  if (typeof Kakao !== 'undefined' && !Kakao.isInitialized()) {
-    Kakao.init('0b8fa62b88b61abad097e3eae4bd313f');
+  function initKakaoSDK() {
+    if (typeof Kakao !== 'undefined' && !Kakao.isInitialized()) {
+      Kakao.init('0b8fa62b88b61abad097e3eae4bd313f');
+    }
   }
+  // SDK 로드 후 초기화 시도
+  initKakaoSDK();
+  window.addEventListener('load', initKakaoSDK);
 
   function shareKakao() {
-    if (typeof Kakao === 'undefined' || !Kakao.isInitialized()) {
-      showToast('카카오 SDK 로딩 중입니다. 잠시 후 다시 시도해주세요.');
+    if (typeof Kakao === 'undefined') {
+      showToast('카카오 SDK를 불러오지 못했습니다');
       return;
+    }
+    if (!Kakao.isInitialized()) {
+      initKakaoSDK();
+      if (!Kakao.isInitialized()) {
+        showToast('잠시 후 다시 시도해주세요');
+        return;
+      }
     }
 
     Kakao.Share.sendDefault({
