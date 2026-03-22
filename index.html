@@ -377,6 +377,28 @@
   }
   .nav-item.active::after { transform: translateX(-50%) scaleX(1); }
 
+  /* === Lightbox (사진 확대 보기) === */
+  .lightbox {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9); z-index: 10000;
+    justify-content: center; align-items: center; flex-direction: column;
+    padding: 20px; cursor: pointer;
+  }
+  .lightbox.active { display: flex; }
+  .lightbox img {
+    max-width: 100%; max-height: 80vh; object-fit: contain; border-radius: 8px;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+  }
+  .lightbox-close {
+    position: absolute; top: 20px; right: 20px;
+    color: white; font-size: 32px; cursor: pointer;
+    width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.1); border-radius: 50%; border: none;
+  }
+  .lightbox-name {
+    color: white; font-size: 13px; margin-top: 12px; opacity: 0.7;
+  }
+
   /* === Animations === */
   @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes bounceDown { 0%, 100% { transform: rotate(45deg) translateY(0); } 50% { transform: rotate(45deg) translateY(6px); } }
@@ -410,6 +432,13 @@
 </style>
 </head>
 <body>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightboxImg" src="" alt="">
+  <div class="lightbox-name" id="lightboxName"></div>
+</div>
 
 <div class="toast" id="toast"></div>
 
@@ -497,9 +526,10 @@
       <div class="location-venue">경기교총웨딩하우스</div>
       <div class="location-address">경기도 수원시 팔달구 팔달산로 89-13<br>(고등동, 경기교총회관)</div>
       <div class="location-tel">☎ 031-256-0700</div>
-      <div style="width:100%; border-radius:16px; overflow:hidden; margin-bottom:16px; border:1px solid var(--border-light);">
-        <iframe src="https://map.kakao.com/link/map/경기교총웨딩하우스,37.2636,127.0286" width="100%" height="250" frameborder="0" style="border:0; display:block;" allowfullscreen></iframe>
+      <div style="width:100%; border-radius:16px; overflow:hidden; margin-bottom:12px; border:1px solid var(--border-light);">
+        <iframe src="https://www.google.com/maps?q=37.2794,126.9966&z=16&output=embed" width="100%" height="250" frameborder="0" style="border:0; display:block;" allowfullscreen loading="lazy"></iframe>
       </div>
+      <button class="map-btn" style="width:100%; margin-bottom:16px; padding:12px;" onclick="navigator.clipboard.writeText('경기도 수원시 팔달구 팔달산로 89-13').then(function(){showToast('주소가 복사되었습니다')})">📋 주소 복사하기</button>
       <div class="map-buttons">
         <button class="map-btn" onclick="openMap('kakao')">🗺️ 카카오맵</button>
         <button class="map-btn" onclick="openMap('naver')">🟢 네이버지도</button>
@@ -863,6 +893,8 @@
           div.style.backgroundImage = 'url(' + photo.thumbnailUrl + ')';
           div.style.backgroundSize = 'cover';
           div.style.backgroundPosition = 'center';
+          div.style.cursor = 'pointer';
+          div.onclick = function() { openLightbox(photo.thumbnailUrl.replace('sz=w400','sz=w1200'), photo.name + ' · ' + photo.date); };
           grid.appendChild(div);
         });
       })
@@ -876,11 +908,11 @@
   });
 
   function openMap(type) {
-    var lat = 37.2636, lng = 127.0286, name = '경기교총웨딩하우스';
+    var lat = 37.2794, lng = 126.9966, name = '경기교총웨딩하우스';
     var urls = {
       kakao: 'https://map.kakao.com/link/map/' + name + ',' + lat + ',' + lng,
-      naver: 'nmap://place?lat=' + lat + '&lng=' + lng + '&name=' + name + '&appname=wedding',
-      tmap: 'tmap://route?goalname=' + name + '&goaly=' + lat + '&goalx=' + lng
+      naver: 'https://map.naver.com/p/search/' + encodeURIComponent('경기도 수원시 팔달구 팔달산로 89-13'),
+      tmap: 'https://apis.openapi.sk.com/tmap/app/routes?appKey=&name=' + encodeURIComponent(name) + '&lon=' + lng + '&lat=' + lat
     };
     window.open(urls[type], '_blank');
   }
@@ -891,6 +923,19 @@
 
   var bgmPlaying = false;
   function toggleBGM() { bgmPlaying = !bgmPlaying; document.getElementById('bgmToggle').classList.toggle('playing', bgmPlaying); }
+
+  // === 사진 확대 보기 (Lightbox) ===
+  function openLightbox(src, caption) {
+    var lb = document.getElementById('lightbox');
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightboxName').textContent = caption || '';
+    lb.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
 
   function showToast(msg) { var t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(function() { t.classList.remove('show'); }, 2000); }
 </script>
