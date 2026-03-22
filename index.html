@@ -18,6 +18,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
 
+<!-- Kakao Maps SDK -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b8fa62b88b61abad097e3eae4bd313f"></script>
+
 <style>
   :root {
     --sage-50: #f2faf0;
@@ -526,14 +529,12 @@
       <div class="location-venue">경기교총웨딩하우스</div>
       <div class="location-address">경기도 수원시 팔달구 팔달산로 89-13<br>(고등동, 경기교총회관)</div>
       <div class="location-tel">☎ 031-256-0700</div>
-      <div style="width:100%; border-radius:16px; overflow:hidden; margin-bottom:12px; border:1px solid var(--border-light);">
-        <iframe src="https://www.google.com/maps?q=37.2794,126.9966&z=16&output=embed" width="100%" height="250" frameborder="0" style="border:0; display:block;" allowfullscreen loading="lazy"></iframe>
-      </div>
+      <div id="kakaoMap" style="width:100%; height:250px; border-radius:16px; overflow:hidden; margin-bottom:12px; border:1px solid var(--border-light);"></div>
       <button class="map-btn" style="width:100%; margin-bottom:16px; padding:12px;" onclick="navigator.clipboard.writeText('경기도 수원시 팔달구 팔달산로 89-13').then(function(){showToast('주소가 복사되었습니다')})">📋 주소 복사하기</button>
       <div class="map-buttons">
-        <button class="map-btn" onclick="openMap('kakao')">🗺️ 카카오맵</button>
-        <button class="map-btn" onclick="openMap('naver')">🟢 네이버지도</button>
-        <button class="map-btn" onclick="openMap('tmap')">🚗 티맵</button>
+        <button class="map-btn" onclick="window.open('https://place.map.kakao.com/12643620','_blank')">🗺️ 카카오맵</button>
+        <button class="map-btn" onclick="window.open('https://naver.me/F1rxrdq0','_blank')">🟢 네이버지도</button>
+        <button class="map-btn" onclick="window.open('https://poi.tmobiweb.com/app/share/position?contents=cGtleT0yNzY5Nzg2MDAmcG9pSWQ9Mjc2OTc4NiZuYXZTZXE9MCZ0eXBlPTImcG9pTmFtZT0lRUElQjIlQkQlRUElQjglQjAlRUElQjUlOTAlRUMlQjQlOUQlRUMlOUIlQTglRUIlOTQlQTklRUQlOTUlOTglRUMlOUElQjAlRUMlOEElQTQmY2VudGVyWD00NTcyMzQ3JmNlbnRlclk9MTM0MTg2NyZ0aW1lPTIwMjYlRUIlODUlODQrMDMlRUMlOUIlOTQrMjIlRUMlOUQlQkMrMDYlM0ExNiZ0ZWw9MDMxLTI1Ni0wNzAwJmFkZHI9JUVBJUIyJUJEJUVBJUI4JUIwKyVFQyU4OCU5OCVFQyU5QiU5MCVFQyU4QiU5QyslRUQlOEMlOTQlRUIlOEIlQUMlRUElQjUlQUMrJUVEJThDJTk0JUVCJThCJUFDJUVDJTgyJUIwJUVCJUExJTlDKzg5LTEz&tailParam=%7B%22reqType%22%3A%221100%22%2C%22reqMode%22%3A%221100%22%2C%22extra%22%3A%22112%22%7D','_blank')">🚗 티맵</button>
       </div>
     </section>
 
@@ -907,15 +908,37 @@
     loadGuestPhotos();
   });
 
-  function openMap(type) {
-    var lat = 37.2794, lng = 126.9966, name = '경기교총웨딩하우스';
-    var urls = {
-      kakao: 'https://map.kakao.com/link/map/' + name + ',' + lat + ',' + lng,
-      naver: 'https://map.naver.com/p/search/' + encodeURIComponent('경기도 수원시 팔달구 팔달산로 89-13'),
-      tmap: 'https://apis.openapi.sk.com/tmap/app/routes?appKey=&name=' + encodeURIComponent(name) + '&lon=' + lng + '&lat=' + lat
-    };
-    window.open(urls[type], '_blank');
+  // === 카카오맵 초기화 ===
+  function initKakaoMap() {
+    var mapContainer = document.getElementById('kakaoMap');
+    if (!mapContainer || typeof kakao === 'undefined') return;
+    
+    var position = new kakao.maps.LatLng(37.2794, 126.9966);
+    var map = new kakao.maps.Map(mapContainer, {
+      center: position,
+      level: 4
+    });
+
+    // 마커
+    var marker = new kakao.maps.Marker({
+      position: position,
+      map: map
+    });
+
+    // 인포윈도우
+    var infowindow = new kakao.maps.InfoWindow({
+      content: '<div style="padding:8px 12px;font-size:13px;font-family:Noto Sans KR,sans-serif;white-space:nowrap;">☘️ <b>경기교총웨딩하우스</b></div>'
+    });
+    infowindow.open(map, marker);
+
+    // 지도 컨트롤
+    map.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
   }
+
+  // 카카오맵 SDK 로드 후 초기화
+  window.addEventListener('load', function() {
+    setTimeout(initKakaoMap, 500);
+  });
 
   function openKakaoPay() { showToast('카카오페이 연동 예정'); }
   function shareKakao() { showToast('카카오톡 공유 (JS SDK 연동 예정)'); }
