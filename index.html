@@ -18,8 +18,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
 
-<!-- Kakao Maps SDK -->
-<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=0b8fa62b88b61abad097e3eae4bd313f&autoload=false"></script>
+<!-- Kakao 지도 퍼가기 -->
+<script charset="UTF-8" src="https://ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js"></script>
 
 <style>
   :root {
@@ -529,7 +529,7 @@
       <div class="location-venue">경기교총웨딩하우스</div>
       <div class="location-address">경기도 수원시 팔달구 팔달산로 89-13<br>(고등동, 경기교총회관)</div>
       <div class="location-tel">☎ 031-256-0700</div>
-      <div id="kakaoMap" style="width:100%; height:250px; border-radius:16px; overflow:hidden; margin-bottom:12px; border:1px solid var(--border-light);"></div>
+      <div id="daumRoughmapContainer1774174897196" class="root_daum_roughmap root_daum_roughmap_landing" style="width:100%; border-radius:16px; overflow:hidden; margin-bottom:12px;"></div>
       <button class="map-btn" style="width:100%; margin-bottom:16px; padding:12px;" onclick="navigator.clipboard.writeText('경기도 수원시 팔달구 팔달산로 89-13').then(function(){showToast('주소가 복사되었습니다')})">📋 주소 복사하기</button>
       <div class="map-buttons">
         <button class="map-btn" onclick="window.open('https://place.map.kakao.com/12643620','_blank')">🗺️ 카카오맵</button>
@@ -908,38 +908,13 @@
     loadGuestPhotos();
   });
 
-  // === 카카오맵 초기화 ===
-  function initKakaoMap() {
-    if (typeof kakao === 'undefined' || !kakao.maps) return;
-    
-    kakao.maps.load(function() {
-      var mapContainer = document.getElementById('kakaoMap');
-      if (!mapContainer) return;
-
-      var position = new kakao.maps.LatLng(37.2794, 126.9966);
-      var map = new kakao.maps.Map(mapContainer, {
-        center: position,
-        level: 4
-      });
-
-      var marker = new kakao.maps.Marker({
-        position: position,
-        map: map
-      });
-
-      var infowindow = new kakao.maps.InfoWindow({
-        content: '<div style="padding:8px 12px;font-size:13px;font-family:Noto Sans KR,sans-serif;white-space:nowrap;">☘️ <b>경기교총웨딩하우스</b></div>'
-      });
-      infowindow.open(map, marker);
-
-      map.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
-    });
-  }
-
-  // 페이지 로드 후 카카오맵 초기화
-  window.addEventListener('load', function() {
-    initKakaoMap();
-  });
+  // === 카카오맵 (지도 퍼가기) ===
+  new daum.roughmap.Lander({
+    "timestamp": "1774174897196",
+    "key": "jqhe28u6u6c",
+    "mapWidth": "100%",
+    "mapHeight": "300"
+  }).render();
 
   function openKakaoPay() { showToast('카카오페이 연동 예정'); }
   function shareKakao() { showToast('카카오톡 공유 (JS SDK 연동 예정)'); }
