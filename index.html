@@ -647,7 +647,7 @@
 
   function renderCalendar() {
     var grid = document.getElementById('calendarGrid');
-    if (!grid) return;
+    if (!grid || grid.children.length > 0) return; // 이미 렌더링됐으면 스킵
     var days = ['일','월','화','수','목','금','토'];
     for (var di = 0; di < days.length; di++) {
       var h = document.createElement('div');
