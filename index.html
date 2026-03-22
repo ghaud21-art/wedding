@@ -991,8 +991,39 @@
   }
   function copyLink() { navigator.clipboard.writeText(window.location.href).then(function() { showToast('링크가 복사되었습니다'); }); }
 
+  // === BGM 플레이어 ===
+  var bgmAudio = new Audio('bgm.mp3');
+  bgmAudio.loop = true;
+  bgmAudio.volume = 0.4;
   var bgmPlaying = false;
-  function toggleBGM() { bgmPlaying = !bgmPlaying; document.getElementById('bgmToggle').classList.toggle('playing', bgmPlaying); }
+
+  function toggleBGM() {
+    var btn = document.getElementById('bgmToggle');
+    if (bgmPlaying) {
+      bgmAudio.pause();
+      bgmPlaying = false;
+      btn.classList.remove('playing');
+    } else {
+      bgmAudio.play().then(function() {
+        bgmPlaying = true;
+        btn.classList.add('playing');
+      }).catch(function() {
+        showToast('화면을 한 번 터치한 후 다시 눌러주세요');
+      });
+    }
+  }
+
+  // 페이지 첫 터치 시 자동재생 시도
+  var bgmFirstTouch = true;
+  document.addEventListener('click', function() {
+    if (bgmFirstTouch && !bgmPlaying) {
+      bgmFirstTouch = false;
+      bgmAudio.play().then(function() {
+        bgmPlaying = true;
+        document.getElementById('bgmToggle').classList.add('playing');
+      }).catch(function() {});
+    }
+  }, { once: false });
 
   // === 사진 확대 보기 (Lightbox) ===
   function openLightbox(src, caption) {
