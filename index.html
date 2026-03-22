@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>결혼식에 초대합니다</title>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --sage-50: #f2faf0;
+    --sage-100: #ddf5d7;
+    --sage-200: #c2e8b8;
+    --sage-300: #98d68a;
+    --sage-400: #6ec05c;
+    --sage-500: #4faa3a;
+    --sage-600: #3d8a2e;
+    --sage-700: #326e26;
+    --sage-800: #2a5821;
+    --sage-900: #23481c;
+
+    --cream: #fffefa;
+    --warm-white: #fdfdf8;
+    --soft-green-bg: #f7fcf5;
+    --text-primary: #2d3a2e;
+    --text-secondary: #5c755e;
+    --text-light: #93ad95;
+    --border-light: #dff0db;
+    --highlight-green: #e8f7e4;
+
+    --max-width: 430px;
+    --nav-height: 64px;
+    --section-padding: 60px 28px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: auto !important; overflow: auto !important; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300;
+    color: var(--text-primary);
+    background: var(--sage-100);
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  .phone-frame {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    background: var(--cream);
+    min-height: 100vh;
+    position: relative;
+    box-shadow: 0 0 80px rgba(79, 170, 58, 0.06);
+  }
+
+  .scroll-container { padding-bottom: calc(var(--nav-height) + 20px); }
+
+  .section { padding: var(--section-padding); position: relative; overflow: hidden; }
+
+  .section-divider {
+    display: flex; align-items: center; justify-content: center; gap: 12px; margin: 0 auto 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; width: 28px; height: 1px; background: var(--sage-300); opacity: 0.5;
+  }
+  .section-divider .leaf-icon { font-size: 14px; opacity: 0.5; }
+
+  .section-label {
+    font-size: 13px; letter-spacing: 1.5px; color: var(--sage-500);
+    text-align: center; margin-bottom: 28px; font-weight: 500;
+  }
+
+  /* === Hero === */
+  .hero {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; padding: 80px 28px 120px;
+    background: linear-gradient(170deg, #edfce8 0%, #f8fff5 30%, var(--cream) 60%, #fef8f0 100%);
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: -80px; right: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(110, 192, 92, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero::after {
+    content: ''; position: absolute; bottom: 80px; left: -50px;
+    width: 260px; height: 260px;
+    background: radial-gradient(circle, rgba(255, 210, 160, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-blob-extra {
+    position: absolute; top: 40%; right: -30px; width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(168, 230, 150, 0.12) 0%, transparent 70%);
+    border-radius: 50%; z-index: 0;
+  }
+
+  .hero-top-text {
+    font-size: 14px; letter-spacing: 2px; color: var(--sage-500);
+    margin-bottom: 32px; font-weight: 400;
+    opacity: 0; animation: fadeUp 1s ease 0.3s forwards; z-index: 1; position: relative;
+  }
+  .hero-photo {
+    width: 220px; height: 300px; border-radius: 140px 140px 20px 20px;
+    background: linear-gradient(145deg, var(--sage-100), #e8f7e4, #fef0e8);
+    margin-bottom: 32px; position: relative; z-index: 1; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; animation: fadeUp 1s ease 0.5s forwards;
+    box-shadow: 0 16px 48px rgba(79, 170, 58, 0.1), 0 4px 16px rgba(0,0,0,0.04);
+  }
+  .hero-photo-placeholder { font-size: 12px; color: var(--sage-400); letter-spacing: 1px; font-weight: 400; }
+
+  .hero-leaf { position: absolute; font-size: 22px; opacity: 0.25; z-index: 0; }
+  .hero-leaf:nth-child(1) { top: 12%; left: 6%; transform: rotate(-30deg); animation: floatLeaf 6s ease-in-out infinite; }
+  .hero-leaf:nth-child(2) { top: 22%; right: 8%; transform: rotate(20deg); animation: floatLeaf 7s ease-in-out 1s infinite; }
+  .hero-leaf:nth-child(3) { bottom: 22%; left: 10%; transform: rotate(45deg); animation: floatLeaf 5s ease-in-out 0.5s infinite; }
+  .hero-leaf:nth-child(4) { bottom: 34%; right: 6%; transform: rotate(-15deg); animation: floatLeaf 8s ease-in-out 2s infinite; }
+
+  .hero-names {
+    font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 300;
+    letter-spacing: 2px; color: var(--text-primary); margin-bottom: 10px;
+    position: relative; z-index: 1; opacity: 0; animation: fadeUp 1s ease 0.7s forwards;
+  }
+  .hero-names .ampersand { font-style: italic; color: var(--sage-400); margin: 0 10px; font-size: 28px; }
+
+  .hero-date {
+    font-size: 13px; color: var(--text-secondary); letter-spacing: 3px; font-weight: 400;
+    opacity: 0; animation: fadeUp 1s ease 0.9s forwards; position: relative; z-index: 1; margin-bottom: 8px;
+  }
+  .hero-venue-hint {
+    font-size: 12px; color: var(--text-light); letter-spacing: 1px; font-weight: 300;
+    opacity: 0; animation: fadeUp 1s ease 1.0s forwards; position: relative; z-index: 1;
+  }
+
+  .hero-scroll-hint {
+    position: absolute; bottom: 36px; left: 0; right: 0;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    opacity: 0; animation: fadeUp 1s ease 1.3s forwards; z-index: 1;
+  }
+  .hero-scroll-hint span { font-size: 9px; letter-spacing: 2px; color: var(--text-light); font-weight: 400; }
+  .scroll-arrow {
+    width: 16px; height: 16px;
+    border-right: 1px solid var(--sage-300); border-bottom: 1px solid var(--sage-300);
+    transform: rotate(45deg); animation: bounceDown 2s ease-in-out infinite;
+  }
+
+  /* === Greeting === */
+  .greeting { background: var(--warm-white); text-align: center; }
+  .greeting-text {
+    font-size: 15px; line-height: 2.2; color: var(--text-secondary);
+    font-weight: 300; max-width: 300px; margin: 0 auto; word-break: keep-all;
+  }
+  .greeting-text .highlight { color: var(--sage-500); font-weight: 400; }
+  .greeting-parents { margin-top: 36px; font-size: 13px; color: var(--text-light); line-height: 2; }
+
+  /* === D-Day === */
+  .dday { background: var(--cream); text-align: center; }
+  .dday-counter { display: flex; justify-content: center; gap: 14px; margin-bottom: 36px; }
+  .dday-box {
+    background: var(--highlight-green); border: 1px solid var(--border-light);
+    border-radius: 16px; padding: 16px 12px; min-width: 70px; transition: transform 0.3s ease;
+  }
+  .dday-box:hover { transform: translateY(-2px); }
+  .dday-number {
+    font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 500;
+    color: var(--sage-500); line-height: 1; margin-bottom: 4px;
+  }
+  .dday-unit { font-size: 10px; color: var(--text-light); letter-spacing: 1px; font-weight: 400; }
+
+  .calendar { background: var(--soft-green-bg); border-radius: 20px; padding: 24px 20px; border: 1px solid var(--border-light); }
+  .calendar-month { font-size: 16px; font-weight: 500; color: var(--text-primary); margin-bottom: 16px; letter-spacing: 1px; }
+  .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
+  .cal-header { font-size: 11px; color: var(--text-light); font-weight: 400; padding: 8px 0; }
+  .cal-header.sun { color: #e07070; }
+  .cal-day { font-size: 13px; padding: 8px 0; color: var(--text-secondary); border-radius: 50%; font-weight: 300; }
+  .cal-day.empty { visibility: hidden; }
+  .cal-day.sun { color: #e07070; }
+  .cal-day.wedding { background: var(--sage-400); color: white; font-weight: 500; box-shadow: 0 2px 12px rgba(110, 192, 92, 0.35); }
+  .cal-day.today { border: 1.5px solid var(--sage-300); }
+
+  /* === Info === */
+  .info { background: var(--warm-white); text-align: center; }
+  .info-card { background: var(--cream); border: 1px solid var(--border-light); border-radius: 20px; padding: 28px 24px; margin-bottom: 16px; }
+  .info-card-title { font-size: 12px; letter-spacing: 1.5px; color: var(--sage-500); font-weight: 500; margin-bottom: 14px; }
+  .info-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--text-primary); font-weight: 400; margin-bottom: 4px; }
+  .info-detail { font-size: 13px; color: var(--text-secondary); line-height: 1.8; }
+  .info-contact {
+    display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 8px 16px;
+    background: var(--highlight-green); border-radius: 20px; font-size: 12px; color: var(--sage-600);
+    text-decoration: none; transition: background 0.3s ease;
+  }
+  .info-contact:hover { background: var(--sage-100); }
+
+  /* === Location === */
+  .location { background: var(--cream); text-align: center; }
+  .location-venue { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--text-primary); margin-bottom: 4px; font-weight: 400; }
+  .location-address { font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.6; }
+  .map-placeholder {
+    width: 100%; height: 200px; background: linear-gradient(135deg, var(--sage-100), var(--highlight-green));
+    border-radius: 16px; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: var(--sage-500); margin-bottom: 16px; border: 1px solid var(--border-light);
+  }
+  .map-buttons { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .map-btn {
+    padding: 10px 20px; border-radius: 24px; font-size: 12px; font-weight: 400;
+    border: 1px solid var(--border-light); background: var(--cream); color: var(--text-secondary);
+    cursor: pointer; transition: all 0.3s ease; font-family: 'Noto Sans KR', sans-serif;
+  }
+  .map-btn:hover { background: var(--highlight-green); border-color: var(--sage-300); color: var(--sage-600); }
+
+  /* === Gallery === */
+  .gallery { background: var(--warm-white); text-align: center; }
+  .gallery-tabs { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+  .gallery-tab {
+    padding: 8px 18px; border-radius: 20px; font-size: 12px; font-weight: 400;
+    border: 1px solid var(--border-light); background: transparent; color: var(--text-light);
+    cursor: pointer; transition: all 0.3s ease; font-family: 'Noto Sans KR', sans-serif;
+  }
+  .gallery-tab.active { background: var(--sage-400); color: white; border-color: var(--sage-400); }
+  .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; border-radius: 16px; overflow: hidden; }
+  .gallery-item {
+    aspect-ratio: 1; background: linear-gradient(135deg, var(--sage-100), var(--highlight-green));
+    display: flex; align-items: center; justify-content: center; cursor: pointer; transition: opacity 0.3s ease;
+  }
+  .gallery-item:hover { opacity: 0.8; }
+  .gallery-item span { font-size: 10px; color: var(--sage-400); }
+
+  /* === Guestbook === */
+  .guestbook { background: var(--cream); text-align: center; }
+  .guestbook-form { background: var(--soft-green-bg); border-radius: 20px; padding: 24px 20px; margin-bottom: 24px; border: 1px solid var(--border-light); }
+  .guestbook-input {
+    width: 100%; border: 1px solid var(--border-light); background: var(--cream);
+    border-radius: 12px; padding: 12px 16px; font-size: 13px; font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300; color: var(--text-primary); outline: none; transition: border-color 0.3s ease; margin-bottom: 8px;
+  }
+  .guestbook-input:focus { border-color: var(--sage-300); }
+  .guestbook-textarea {
+    width: 100%; border: 1px solid var(--border-light); background: var(--cream);
+    border-radius: 12px; padding: 12px 16px; font-size: 13px; font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300; color: var(--text-primary); outline: none; resize: none; height: 80px;
+    transition: border-color 0.3s ease; margin-bottom: 12px;
+  }
+  .guestbook-textarea:focus { border-color: var(--sage-300); }
+  .guestbook-submit {
+    width: 100%; padding: 12px; background: var(--sage-400); color: white; border: none;
+    border-radius: 12px; font-size: 13px; font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400; cursor: pointer; transition: background 0.3s ease;
+  }
+  .guestbook-submit:hover { background: var(--sage-500); }
+  .guestbook-messages { display: flex; flex-direction: column; gap: 12px; }
+  .guestbook-msg { background: var(--highlight-green); border-radius: 16px; padding: 16px 20px; text-align: left; border: 1px solid var(--border-light); }
+  .guestbook-msg-author { font-size: 12px; font-weight: 500; color: var(--sage-600); margin-bottom: 4px; }
+  .guestbook-msg-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+  /* === RSVP === */
+  .rsvp { background: var(--warm-white); text-align: center; }
+  .rsvp-form { background: var(--cream); border: 1px solid var(--border-light); border-radius: 20px; padding: 28px 24px; text-align: left; }
+  .rsvp-field { margin-bottom: 20px; }
+  .rsvp-label { font-size: 12px; font-weight: 400; color: var(--text-secondary); margin-bottom: 8px; display: block; }
+  .rsvp-input {
+    width: 100%; border: 1px solid var(--border-light); background: var(--soft-green-bg);
+    border-radius: 12px; padding: 12px 16px; font-size: 13px; font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300; color: var(--text-primary); outline: none; transition: border-color 0.3s ease;
+  }
+  .rsvp-input:focus { border-color: var(--sage-300); }
+  .rsvp-radio-group { display: flex; gap: 8px; }
+  .rsvp-radio-label {
+    flex: 1; padding: 12px; background: var(--soft-green-bg); border: 1px solid var(--border-light);
+    border-radius: 12px; text-align: center; font-size: 13px; color: var(--text-secondary);
+    cursor: pointer; transition: all 0.3s ease;
+  }
+  .rsvp-radio-label.selected { background: var(--sage-400); color: white; border-color: var(--sage-400); }
+  .rsvp-submit {
+    width: 100%; padding: 14px; background: var(--sage-500); color: white; border: none;
+    border-radius: 12px; font-size: 14px; font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400; cursor: pointer; transition: background 0.3s ease; margin-top: 4px;
+  }
+  .rsvp-submit:hover { background: var(--sage-600); }
+
+  /* === Account === */
+  .account { background: var(--cream); text-align: center; }
+  .account-group { margin-bottom: 16px; }
+  .account-toggle {
+    width: 100%; display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 20px; background: var(--highlight-green); border: 1px solid var(--border-light);
+    border-radius: 16px; font-size: 14px; font-weight: 400; color: var(--text-primary);
+    cursor: pointer; transition: background 0.3s ease; font-family: 'Noto Sans KR', sans-serif;
+  }
+  .account-toggle:hover { background: var(--sage-100); }
+  .account-toggle .arrow { font-size: 12px; color: var(--sage-400); transition: transform 0.3s ease; }
+  .account-toggle.open .arrow { transform: rotate(180deg); }
+  .account-details { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+  .account-details.open { max-height: 200px; }
+  .account-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--border-light); }
+  .account-item:last-child { border-bottom: none; }
+  .account-info { text-align: left; }
+  .account-bank { font-size: 11px; color: var(--text-light); }
+  .account-number { font-size: 13px; color: var(--text-primary); font-weight: 400; }
+  .copy-btn {
+    padding: 6px 14px; background: var(--sage-400); color: white; border: none;
+    border-radius: 8px; font-size: 11px; cursor: pointer; font-family: 'Noto Sans KR', sans-serif;
+    transition: background 0.3s ease;
+  }
+  .copy-btn:hover { background: var(--sage-500); }
+  .kakao-pay-btn {
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; padding: 14px 28px;
+    background: #FEE500; color: #191919; border: none; border-radius: 12px; font-size: 14px;
+    font-weight: 500; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; transition: opacity 0.3s ease;
+  }
+  .kakao-pay-btn:hover { opacity: 0.9; }
+
+  /* === Guest Snap === */
+  .guest-snap { background: var(--warm-white); text-align: center; }
+  .snap-upload-area {
+    border: 2px dashed var(--sage-300); border-radius: 20px; padding: 40px 20px;
+    background: var(--highlight-green); cursor: pointer; transition: all 0.3s ease; margin-bottom: 24px;
+  }
+  .snap-upload-area:hover { border-color: var(--sage-400); background: var(--sage-100); }
+  .snap-icon { font-size: 36px; margin-bottom: 12px; }
+  .snap-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .snap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; border-radius: 12px; overflow: hidden; }
+  .snap-item { aspect-ratio: 1; background: linear-gradient(135deg, var(--sage-100), var(--highlight-green)); display: flex; align-items: center; justify-content: center; }
+  .snap-item span { font-size: 10px; color: var(--sage-400); }
+
+  /* === Share === */
+  .share { background: var(--cream); text-align: center; padding-bottom: 100px; }
+  .share-buttons { display: flex; gap: 12px; justify-content: center; }
+  .share-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 24px;
+    border-radius: 16px; border: 1px solid var(--border-light); background: var(--cream);
+    cursor: pointer; transition: all 0.3s ease; font-family: 'Noto Sans KR', sans-serif;
+  }
+  .share-btn:hover { background: var(--highlight-green); border-color: var(--sage-300); }
+  .share-btn-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .share-btn-icon.kakao { background: #FEE500; }
+  .share-btn-icon.link { background: var(--sage-100); }
+  .share-btn span { font-size: 11px; color: var(--text-secondary); }
+
+  /* === Bottom Nav === */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: var(--max-width); height: var(--nav-height);
+    background: rgba(255, 254, 250, 0.97); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border-light); display: flex; align-items: center;
+    justify-content: space-around; z-index: 9998; padding: 0 4px; padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+  .nav-item {
+    display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 6px;
+    cursor: pointer; position: relative; transition: all 0.3s ease; border: none; background: none;
+    font-family: 'Noto Sans KR', sans-serif; min-width: 52px;
+  }
+  .nav-icon { font-size: 18px; transition: transform 0.3s ease; line-height: 1; }
+  .nav-label { font-size: 9px; font-weight: 400; color: var(--text-light); letter-spacing: 0.5px; transition: color 0.3s ease; }
+  .nav-item.active .nav-label { color: var(--sage-600); font-weight: 500; }
+  .nav-item.active .nav-icon { transform: translateY(-1px); }
+  .nav-item::after {
+    content: ''; position: absolute; top: 0; left: 50%;
+    transform: translateX(-50%) scaleX(0); width: 24px; height: 2px;
+    background: var(--sage-400); border-radius: 1px; transition: transform 0.3s ease;
+  }
+  .nav-item.active::after { transform: translateX(-50%) scaleX(1); }
+
+  /* === Animations === */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes bounceDown { 0%, 100% { transform: rotate(45deg) translateY(0); } 50% { transform: rotate(45deg) translateY(6px); } }
+  @keyframes floatLeaf { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  .toast {
+    position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--text-primary); color: white; padding: 12px 24px; border-radius: 12px;
+    font-size: 13px; z-index: 9999; opacity: 0; transition: all 0.3s ease; pointer-events: none;
+    font-family: 'Noto Sans KR', sans-serif; max-width: 300px; text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .bgm-toggle {
+    position: fixed; top: 20px; right: 20px; width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(255, 254, 250, 0.92); backdrop-filter: blur(10px);
+    border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 101; transition: all 0.3s ease;
+  }
+  .bgm-toggle:hover { background: var(--highlight-green); }
+  .bgm-toggle .bars { display: flex; gap: 2px; align-items: flex-end; height: 14px; }
+  .bgm-toggle .bar { width: 2px; background: var(--sage-500); border-radius: 1px; transition: height 0.3s ease; }
+  .bgm-toggle.playing .bar:nth-child(1) { height: 8px; animation: barBounce 0.6s ease infinite; }
+  .bgm-toggle.playing .bar:nth-child(2) { height: 12px; animation: barBounce 0.6s ease 0.1s infinite; }
+  .bgm-toggle.playing .bar:nth-child(3) { height: 6px; animation: barBounce 0.6s ease 0.2s infinite; }
+  .bgm-toggle.playing .bar:nth-child(4) { height: 10px; animation: barBounce 0.6s ease 0.3s infinite; }
+  .bgm-toggle:not(.playing) .bar { height: 2px; }
+  @keyframes barBounce { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(0.5); } }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="phone-frame">
+  <div class="scroll-container">
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+      <div class="bgm-toggle" id="bgmToggle" onclick="toggleBGM()">
+        <div class="bars"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+      </div>
+      <div class="hero-blob-extra"></div>
+      <div class="hero-leaf">☘️</div>
+      <div class="hero-leaf">☘️</div>
+      <div class="hero-leaf">☘️</div>
+      <div class="hero-leaf">☘️</div>
+
+      <div class="hero-top-text">☘️ 결혼식에 초대합니다 ☘️</div>
+      <div class="hero-photo"><span class="hero-photo-placeholder">메인 사진</span></div>
+      <div class="hero-names">인환 <span class="ampersand">&</span> 진희</div>
+      <div class="hero-date">2027. 02. 27 토요일 오전 11시</div>
+      <div class="hero-venue-hint">경기교총웨딩하우스 수원</div>
+
+      <div class="hero-scroll-hint">
+        <span>아래로 스크롤</span>
+        <div class="scroll-arrow"></div>
+      </div>
+    </section>
+
+    <!-- GREETING -->
+    <section class="section greeting fade-in" id="greeting">
+      <div class="section-divider"><span class="leaf-icon">☘️</span></div>
+      <div class="section-label">초대합니다</div>
+      <p class="greeting-text">
+        서로 다른 길을 걷던 두 사람이<br>
+        같은 곳을 바라보며<br>
+        <span class="highlight">함께 걸어가려 합니다.</span><br><br>
+        저희의 새로운 시작을<br>
+        축복해 주시면 감사하겠습니다.
+      </p>
+      <div class="greeting-parents">
+        ○○○ · ○○○ 의 장남 <span class="highlight">인환</span><br>
+        ○○○ · ○○○ 의 장녀 <span class="highlight">진희</span>
+      </div>
+    </section>
+
+    <!-- D-DAY -->
+    <section class="section dday fade-in" id="dday">
+      <div class="section-divider"><span class="leaf-icon">☘️</span></div>
+      <div class="section-label">그 날</div>
+      <div class="dday-counter">
+        <div class="dday-box"><div class="dday-number" id="ddayDays">69</div><div class="dday-unit">일</div></div>
+        <div class="dday-box"><div class="dday-number" id="ddayHours">14</div><div class="dday-unit">시간</div></div>
+        <div class="dday-box"><div class="dday-number" id="ddayMins">30</div><div class="dday-unit">분</div></div>
+        <div class="dday-box"><div class="dday-number" id="ddaySecs">00</div><div class="dday-unit">초</div></div>
+      </div>
+      <div class="calendar">
+        <div class="calendar-month">2027년 2월</div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+      </div>
+    </section>
+
+    <!-- COUPLE INFO -->
+    <section class="section info fade-in" id="info">
+      <div class="section-divider"><span class="leaf-icon">☘️</span></div>
+      <div class="section-label">신랑 · 신부</div>
+      <div class="info-card">
+        <div class="info-card-title">신랑</div>
+        <div class="info-name">김인환</div>
+        <div class="info-detail">1997. 07. 20</div>
+        <a href="tel:010-7923-0966" class="info-contact">📞 신랑에게 연락하기</a>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">신부</div>
+        <div class="info-name">박진희</div>
+        <div class="info-detail">1998. 02. 01</div>
+        <a href="tel:010-3942-1925" class="info-contact">📞 신부에게 연락하기</a>
+      </div>
+    </section>
+
+    <!-- LOCATION -->
+    <section class="section location fade-in" id="location">
+      <div class="section-divider"><span class="leaf-icon">☘️</span></div>
+      <div class="section-label">예식장 정보</div>
+      <div class="location-venue">경기교총웨딩하우스</div>
+      <div class="location-address">경기도 수원시<br>(상세 주소 추후 입력)</div>
+      <div class="map-placeholder">🗺️ 카카오맵 지도 임베드 영역</div>
+      <div class="map-buttons">
+        <button class="map-btn" onclick="openMap('kakao')">카카오맵</button>
+        <button class="map-btn" onclick="openMap('naver')">네이버지도</button>
+        <button class="map-btn" onclick="openMap('tmap')">티맵</button>
+      </div>
+    </section>
+
+    <!-- TRANSPORT -->
+    <section class="section info fade-in" id="transport">
+      <div class="section-divider"><span class="leaf-icon">☘️</span></div>
+      <div class="section-label">오시는 길</div>
+      <div class="info-card">
+        <div class="info-card-title">🚇 지하철</div>
+        <div class="info-detail">7호선 청담역 2번출구<br>도보 5분</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">🚗 자가용</div>
+        <div class="info-detail">건물 내 지하주차장 이용<br>2시간 무료주차</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">🚌 전세버스</div>
+        <div class="info-detail">수원역 12:00 출발<br>참석여부에서 탑승 신청</div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="section gallery fade-in" id="gallery">
+      <div class="section-divider"><span class="leaf-icon">☘️</span></div>
+      <div class="section-label">갤러리</div>
+      <div class="gallery-tabs">
+        <button class="gallery-tab active" onclick="switchTab(this)">스튜디오</button>
+        <button class="gallery-tab" onclick="switchTab(this)">야외</button>
+        <button class="gallery-tab" onclick="switchTab(this)">캐주얼</button>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item"><span>photo</span></div>
+        <div class="gallery-item"><span>photo</span></div>
+        <div class="gallery-item"><span>photo</span></div>
+        <div class="gallery-item"><span>photo</span></div>
+        <div class="gallery-item"><span>photo</span></div>
+        <div class="gallery-item"><span>photo</span></div>
+      </div>
+    </section>
+
+    <!-- GUESTBOOK -->
+    <section class="section guestbook fade-in" id="guestbook">
+      <div class="section-divider"><span class="leaf-icon">☘️</span></div>
+      <div class="section-label">방명록</div>
+      <div class="guestbook-form">
+        <input type="text" class="guestbook-input" placeholder="이름">
+        <textarea class="guestbook-textarea" placeholder="축하 메시지를 남겨주세요 ☘️"></textarea>
+        <button class="guestbook-submit" onclick="submitGuestbook()">등록하기</button>
+      </div>
+      <div class="guestbook-messages">
+        <div class="guestbook-msg"><div class="guestbook-msg-author">김영희</div><div class="guestbook-msg-text">결혼 진심으로 축하해! 행복하게 살아~ ☘️</div></div>
+        <div class="guestbook-msg"><div class="guestbook-msg-author">이철수</div><div class="guestbook-msg-text">두 분의 앞날에 꽃길만 가득하길!</div></div>
+      </div>
+    </section>
+
+    <!-- RSVP -->
+    <section class="section rsvp fade-in" id="rsvp">
+      <div class="section-divider"><span class="leaf-icon">☘️</span></div>
+      <div class="section-label">참석 여부 응답</div>
+      <div class="rsvp-form">
+        <div class="rsvp-field"><label class="rsvp-label">이름</label><input type="text" class="rsvp-input" placeholder="성함을 입력해 주세요"></div>
+        <div class="rsvp-field"><label class="rsvp-label">참석 여부</label><div class="rsvp-radio-group"><div class="rsvp-radio-label" onclick="selectRadio(this)">참석</div><div class="rsvp-radio-label" onclick="selectRadio(this)">불참</div></div></div>
+        <div class="rsvp-field"><label class="rsvp-label">식사 여부</label><div class="rsvp-radio-group"><div class="rsvp-radio-label" onclick="selectRadio(this)">식사함</div><div class="rsvp-radio-label" onclick="selectRadio(this)">식사 안함</div></div></div>
+        <div class="rsvp-field"><label class="rsvp-label">동행 인원 (본인 포함)</label><input type="number" class="rsvp-input" placeholder="1" min="1" max="10"></div>
+        <div class="rsvp-field"><label class="rsvp-label">연락처 (리마인드 알림용)</label><input type="tel" class="rsvp-input" placeholder="010-0000-0000"></div>
+        <div class="rsvp-field"><label class="rsvp-label">전세버스 탑승</label><div class="rsvp-radio-group"><div class="rsvp-radio-label" onclick="selectRadio(this)">탑승</div><div class="rsvp-radio-label" onclick="selectRadio(this)">미탑승</div></div></div>
+        <button class="rsvp-submit" onclick="submitRSVP()">참석 의사 전달하기</button>
+      </div>
+    </section>
+
+    <!-- ACCOUNT -->
+    <section class="section account fade-in" id="account">
+      <div class="section-divider"><span class="leaf-icon">☘️</span></div>
+      <div class="section-label">축하하기</div>
+      <div class="account-group">
+        <button class="account-toggle" onclick="toggleAccount(this)">신랑측 계좌번호 <span class="arrow">▼</span></button>
+        <div class="account-details">
+          <div class="account-item"><div class="account-info"><div class="account-bank">○○은행 (김인환)</div><div class="account-number">000-000-000000</div></div><button class="copy-btn" onclick="copyAccount('000-000-000000')">복사</button></div>
+          <div class="account-item"><div class="account-info"><div class="account-bank">○○은행 (아버지 김○○)</div><div class="account-number">000-000-000000</div></div><button class="copy-btn" onclick="copyAccount('000-000-000000')">복사</button></div>
+        </div>
+      </div>
+      <div class="account-group">
+        <button class="account-toggle" onclick="toggleAccount(this)">신부측 계좌번호 <span class="arrow">▼</span></button>
+        <div class="account-details">
+          <div class="account-item"><div class="account-info"><div class="account-bank">○○은행 (박진희)</div><div class="account-number">000-000-000000</div></div><button class="copy-btn" onclick="copyAccount('000-000-000000')">복사</button></div>
+          <div class="account-item"><div class="account-info"><div class="account-bank">○○은행 (아버지 박○○)</div><div class="account-number">000-000-000000</div></div><button class="copy-btn" onclick="copyAccount('000-000-000000')">복사</button></div>
+        </div>
+      </div>
+      <button class="kakao-pay-btn" onclick="openKakaoPay()">💛 카카오페이로 축하하기</button>
+    </section>
+
+    <!-- GUEST SNAP -->
+    <section class="section guest-snap fade-in" id="snap">
+      <div class="section-divider"><span class="leaf-icon">☘️</span></div>
+      <div class="section-label">추억 공유</div>
+      <div class="snap-upload-area" onclick="document.getElementById('snapInput').click()">
+        <div class="snap-icon">📸</div>
+        <div class="snap-text">결혼식에서 찍은 사진을<br>여기에 올려주세요!</div>
+        <input type="file" id="snapInput" accept="image/*" multiple hidden>
+      </div>
+      <div class="snap-grid">
+        <div class="snap-item"><span>snap</span></div>
+        <div class="snap-item"><span>snap</span></div>
+        <div class="snap-item"><span>snap</span></div>
+      </div>
+    </section>
+
+    <!-- SHARE -->
+    <section class="section share fade-in" id="share">
+      <div class="section-divider"><span class="leaf-icon">☘️</span></div>
+      <div class="section-label">공유하기</div>
+      <div class="share-buttons">
+        <button class="share-btn" onclick="shareKakao()"><div class="share-btn-icon kakao">💬</div><span>카카오톡</span></button>
+        <button class="share-btn" onclick="copyLink()"><div class="share-btn-icon link">🔗</div><span>링크 복사</span></button>
+      </div>
+    </section>
+
+  </div>
+
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="scrollToSection('home')"><span class="nav-icon">🏠</span><span class="nav-label">홈</span></button>
+  <button class="nav-item" onclick="scrollToSection('info')"><span class="nav-icon">💑</span><span class="nav-label">소개</span></button>
+  <button class="nav-item" onclick="scrollToSection('location')"><span class="nav-icon">📍</span><span class="nav-label">오시는길</span></button>
+  <button class="nav-item" onclick="scrollToSection('gallery')"><span class="nav-icon">🖼</span><span class="nav-label">갤러리</span></button>
+  <button class="nav-item" onclick="scrollToSection('rsvp')"><span class="nav-icon">✉️</span><span class="nav-label">참석</span></button>
+  <button class="nav-item" onclick="scrollToSection('account')"><span class="nav-icon">💝</span><span class="nav-label">축의금</span></button>
+</nav>
+
+<script>
+  var weddingDate = new Date('2027-02-27T11:00:00+09:00');
+
+  function updateCountdown() {
+    var diff = weddingDate - new Date();
+    if (diff <= 0) { ['ddayDays','ddayHours','ddayMins','ddaySecs'].forEach(function(id) { document.getElementById(id).textContent = '0'; }); return; }
+    document.getElementById('ddayDays').textContent = Math.floor(diff / 864e5);
+    document.getElementById('ddayHours').textContent = Math.floor((diff % 864e5) / 36e5);
+    document.getElementById('ddayMins').textContent = String(Math.floor((diff % 36e5) / 6e4)).padStart(2, '0');
+    document.getElementById('ddaySecs').textContent = String(Math.floor((diff % 6e4) / 1e3)).padStart(2, '0');
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  function renderCalendar() {
+    var grid = document.getElementById('calendarGrid');
+    if (!grid) return;
+    var days = ['일','월','화','수','목','금','토'];
+    for (var di = 0; di < days.length; di++) {
+      var h = document.createElement('div');
+      h.className = 'cal-header' + (di === 0 ? ' sun' : '');
+      h.textContent = days[di];
+      grid.appendChild(h);
+    }
+    var startDay = 1, totalDays = 28;
+    var today = new Date();
+    var todayDate = (today.getFullYear() === 2027 && today.getMonth() === 1) ? today.getDate() : -1;
+    for (var i = 0; i < startDay; i++) { var e = document.createElement('div'); e.className = 'cal-day empty'; grid.appendChild(e); }
+    for (var d = 1; d <= totalDays; d++) {
+      var c = document.createElement('div');
+      c.className = 'cal-day';
+      if ((startDay + d - 1) % 7 === 0) c.classList.add('sun');
+      if (d === 27) c.classList.add('wedding');
+      if (d === todayDate) c.classList.add('today');
+      c.textContent = d;
+      grid.appendChild(c);
+    }
+  }
+  // 즉시 실행 + 안전장치
+  renderCalendar();
+  document.addEventListener('DOMContentLoaded', renderCalendar);
+
+  function scrollToSection(id) {
+    var el = document.getElementById(id);
+    if (el) {
+      // GAS iframe에서도 동작하는 스크롤
+      try {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch(e) {
+        el.scrollIntoView(true);
+      }
+    }
+  }
+
+  var sections = ['home','info','location','gallery','rsvp','account'];
+  var navItems = document.querySelectorAll('.nav-item');
+  
+  function updateNav() {
+    var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    var viewH = window.innerHeight || document.documentElement.clientHeight;
+    var sy = scrollTop + viewH / 3;
+    var ai = 0;
+    sections.forEach(function(id, i) { var el = document.getElementById(id); if (el && el.offsetTop <= sy) ai = i; });
+    navItems.forEach(function(item, i) { item.classList.toggle('active', i === ai); });
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+  setTimeout(updateNav, 500);
+
+  // fade-in 애니메이션
+  var fadeObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.fade-in').forEach(function(el) { fadeObserver.observe(el); });
+
+  function switchTab(el) {
+    document.querySelectorAll('.gallery-tab').forEach(function(t) { t.classList.remove('active'); });
+    el.classList.add('active');
+  }
+
+  function toggleAccount(btn) { btn.classList.toggle('open'); btn.nextElementSibling.classList.toggle('open'); }
+
+  function copyAccount(n) { navigator.clipboard.writeText(n).then(() => showToast('계좌번호가 복사되었습니다')).catch(() => showToast('복사에 실패했습니다')); }
+
+  function selectRadio(el) {
+    el.parentElement.querySelectorAll('.rsvp-radio-label').forEach(function(r) { r.classList.remove('selected'); });
+    el.classList.add('selected');
+  }
+
+  // ★ GAS 웹앱 배포 URL을 여기에 붙여넣으세요
+  var GAS_API_URL = '여기에_GAS_웹앱_배포_URL_붙여넣기';
+
+  // === API 호출 헬퍼 ===
+  function apiGet(action) {
+    return fetch(GAS_API_URL + '?action=' + action)
+      .then(function(r) { return r.json(); });
+  }
+
+  function apiPost(data) {
+    return fetch(GAS_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(data)
+    }).then(function(r) { return r.json(); });
+  }
+
+  // === 방명록 ===
+  function submitGuestbook() {
+    var nameInput = document.querySelector('.guestbook-input');
+    var msgInput = document.querySelector('.guestbook-textarea');
+    var name = nameInput.value.trim();
+    var message = msgInput.value.trim();
+    if (!name || !message) { showToast('이름과 메시지를 모두 입력해주세요'); return; }
+
+    var btn = document.querySelector('.guestbook-submit');
+    btn.disabled = true;
+    btn.textContent = '등록 중...';
+
+    apiPost({ action: 'submitGuestbook', name: name, message: message })
+      .then(function(result) {
+        btn.disabled = false;
+        btn.textContent = '등록하기';
+        if (result.success) {
+          showToast('축하 메시지가 등록되었습니다 ☘️');
+          nameInput.value = '';
+          msgInput.value = '';
+          loadGuestbook();
+        } else {
+          showToast('등록 실패: ' + (result.error || ''));
+        }
+      })
+      .catch(function() {
+        btn.disabled = false;
+        btn.textContent = '등록하기';
+        showToast('오류가 발생했습니다');
+      });
+  }
+
+  function loadGuestbook() {
+    apiGet('getGuestbook')
+      .then(function(entries) {
+        var container = document.querySelector('.guestbook-messages');
+        container.innerHTML = '';
+        if (!entries || !entries.length) return;
+        entries.forEach(function(entry) {
+          var div = document.createElement('div');
+          div.className = 'guestbook-msg';
+          div.innerHTML = '<div class="guestbook-msg-author">' + entry.name + ' <span style="font-size:10px;color:var(--text-light);font-weight:300;">' + entry.date + '</span></div><div class="guestbook-msg-text">' + entry.message + '</div>';
+          container.appendChild(div);
+        });
+      })
+      .catch(function() {});
+  }
+
+  // === 참석 여부 ===
+  function submitRSVP() {
+    var form = document.querySelector('.rsvp-form');
+    var inputs = form.querySelectorAll('.rsvp-input');
+    var name = inputs[0].value.trim();
+    var guests = inputs[1].value.trim();
+    var phone = inputs[2].value.trim();
+
+    var radioGroups = form.querySelectorAll('.rsvp-radio-group');
+    var attendEl = radioGroups[0].querySelector('.selected');
+    var mealEl = radioGroups[1].querySelector('.selected');
+    var busEl = radioGroups[2].querySelector('.selected');
+    var attendance = attendEl ? attendEl.textContent : '';
+    var meal = mealEl ? mealEl.textContent : '';
+    var bus = busEl ? busEl.textContent : '';
+
+    if (!name) { showToast('성함을 입력해주세요'); return; }
+    if (!attendance) { showToast('참석 여부를 선택해주세요'); return; }
+
+    var btn = document.querySelector('.rsvp-submit');
+    btn.disabled = true;
+    btn.textContent = '전송 중...';
+
+    apiPost({ action: 'submitRSVP', name: name, attendance: attendance, meal: meal, guests: guests || '1', phone: phone, bus: bus })
+      .then(function(result) {
+        btn.disabled = false;
+        btn.textContent = '참석 의사 전달하기';
+        if (result.success) {
+          showToast('참석 의사가 전달되었습니다 ☘️');
+          inputs.forEach(function(input) { input.value = ''; });
+          form.querySelectorAll('.rsvp-radio-label.selected').forEach(function(el) { el.classList.remove('selected'); });
+        } else {
+          showToast('전송 실패: ' + (result.error || ''));
+        }
+      })
+      .catch(function() {
+        btn.disabled = false;
+        btn.textContent = '참석 의사 전달하기';
+        showToast('오류가 발생했습니다');
+      });
+  }
+
+  // === 게스트 사진 ===
+  document.getElementById('snapInput').addEventListener('change', function(e) {
+    var files = e.target.files;
+    if (!files.length) return;
+
+    Array.from(files).forEach(function(file) {
+      if (file.size > 10 * 1024 * 1024) { showToast('10MB 이하 파일만 업로드 가능합니다'); return; }
+      var reader = new FileReader();
+      reader.onload = function(evt) {
+        var base64 = evt.target.result.split(',')[1];
+        showToast('사진 업로드 중...');
+        apiPost({ action: 'uploadPhoto', fileData: base64, fileName: file.name, mimeType: file.type, uploaderName: '' })
+          .then(function(result) {
+            if (result.success) { showToast('사진이 업로드되었습니다 📸'); loadGuestPhotos(); }
+            else { showToast('업로드 실패: ' + (result.error || '')); }
+          })
+          .catch(function() { showToast('업로드 중 오류가 발생했습니다'); });
+      };
+      reader.readAsDataURL(file);
+    });
+    e.target.value = '';
+  });
+
+  function loadGuestPhotos() {
+    apiGet('getPhotos')
+      .then(function(photos) {
+        var grid = document.querySelector('.snap-grid');
+        grid.innerHTML = '';
+        if (!photos || !photos.length) { grid.innerHTML = '<div class="snap-item"><span>아직 사진이 없어요</span></div>'; return; }
+        photos.forEach(function(photo) {
+          var div = document.createElement('div');
+          div.className = 'snap-item';
+          div.style.backgroundImage = 'url(' + photo.thumbnailUrl + ')';
+          div.style.backgroundSize = 'cover';
+          div.style.backgroundPosition = 'center';
+          grid.appendChild(div);
+        });
+      })
+      .catch(function() {});
+  }
+
+  // 페이지 로드 시 데이터 불러오기
+  window.addEventListener('load', function() {
+    loadGuestbook();
+    loadGuestPhotos();
+  });
+
+  function openMap(type) {
+    var lat = 37.2636, lng = 127.0286, name = '경기교총웨딩하우스';
+    var urls = {
+      kakao: 'https://map.kakao.com/link/map/' + name + ',' + lat + ',' + lng,
+      naver: 'nmap://place?lat=' + lat + '&lng=' + lng + '&name=' + name + '&appname=wedding',
+      tmap: 'tmap://route?goalname=' + name + '&goaly=' + lat + '&goalx=' + lng
+    };
+    window.open(urls[type], '_blank');
+  }
+
+  function openKakaoPay() { showToast('카카오페이 연동 예정'); }
+  function shareKakao() { showToast('카카오톡 공유 (JS SDK 연동 예정)'); }
+  function copyLink() { navigator.clipboard.writeText(window.location.href).then(function() { showToast('링크가 복사되었습니다'); }); }
+
+  var bgmPlaying = false;
+  function toggleBGM() { bgmPlaying = !bgmPlaying; document.getElementById('bgmToggle').classList.toggle('playing', bgmPlaying); }
+
+  function showToast(msg) { var t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(function() { t.classList.remove('show'); }, 2000); }
+</script>
+
+</body>
+</html>
