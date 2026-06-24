@@ -548,15 +548,15 @@
       <div class="section-label">오시는 길</div>
       <div class="info-card">
         <div class="info-card-title">🚇 지하철 + 셔틀버스</div>
-        <div class="info-detail">1호선 수원역 하차<br>지하상가 3번 출구 앞<br>셔틀버스 10분 간격 운행</div>
+        <div class="info-detail">1호선/수인분당선 수원역 하차<br>지하상가 13번 출구에서 50m 직진<br>셔틀버스 10분 간격 운행</div>
       </div>
       <div class="info-card">
         <div class="info-card-title">🚌 버스</div>
-        <div class="info-detail">화서사거리, 병무청입구<br>정류장 하차</div>
+        <div class="info-detail">병무청입구/병무청 사거리<br>정류장 하차</div>
       </div>
       <div class="info-card">
         <div class="info-card-title">🚗 자가용</div>
-        <div class="info-detail">네비게이션 "경기도청후문" 검색<br>또는 "수원시 팔달구 고등동 42-98"<br>주차 700대 가능 (무료)</div>
+        <div class="info-detail">경기교총웨딩하우스 주차장<br>또는 구)경기도청(수원) 주차장 이용 가능<br></div>
       </div>
     </section>
 
@@ -607,20 +607,21 @@
     <!-- ACCOUNT -->
     <section class="section account fade-in" id="account">
       <div class="section-divider"><span class="leaf-icon">☘️</span></div>
-      <div class="section-label">축하하기</div>
+      <div class="section-label">마음 전하실 곳</div>
       <div class="account-group">
-        <button class="account-toggle" onclick="toggleAccount(this)">신랑측 계좌번호 <span class="arrow">▼</span></button>
+        <button class="account-toggle" onclick="toggleAccount(this)">신랑 축하하기 <span class="arrow">▼</span></button>
         <div class="account-details">
           <div class="account-item"><div class="account-info"><div class="account-bank">카카오뱅크 (김인환)</div><div class="account-number">3333-0213-50218</div></div><button class="copy-btn" onclick="copyAccount('3333021350218')">복사</button></div>
+          <button class="kakao-pay-btn" style="margin-top:12px;" onclick="window.open('https://qr.kakaopay.com/신랑링크여기','_blank')">💛 카카오페이로 보내기</button>
         </div>
       </div>
       <div class="account-group">
-        <button class="account-toggle" onclick="toggleAccount(this)">신부측 계좌번호 <span class="arrow">▼</span></button>
+        <button class="account-toggle" onclick="toggleAccount(this)">신부 축하하기 <span class="arrow">▼</span></button>
         <div class="account-details">
           <div class="account-item"><div class="account-info"><div class="account-bank">신한은행 (박진희)</div><div class="account-number">110-536-795109</div></div><button class="copy-btn" onclick="copyAccount('110536795109')">복사</button></div>
+          <button class="kakao-pay-btn" style="margin-top:12px;" onclick="window.open('https://qr.kakaopay.com/Ej8aV6pAJ','_blank')">💛 카카오페이로 보내기</button>
         </div>
       </div>
-      <button class="kakao-pay-btn" onclick="window.open('https://qr.kakaopay.com/Ej8aV6pAJ','_blank')">💛 카카오페이로 축하하기</button>
     </section>
 
     <!-- GUEST SNAP -->
@@ -660,7 +661,7 @@
   <button class="nav-item" onclick="scrollToSection('location')"><span class="nav-icon">📍</span><span class="nav-label">오시는길</span></button>
   <button class="nav-item" onclick="scrollToSection('gallery')"><span class="nav-icon">🖼</span><span class="nav-label">갤러리</span></button>
   <button class="nav-item" onclick="scrollToSection('rsvp')"><span class="nav-icon">✉️</span><span class="nav-label">참석</span></button>
-  <button class="nav-item" onclick="scrollToSection('account')"><span class="nav-icon">💝</span><span class="nav-label">축의금</span></button>
+  <button class="nav-item" onclick="scrollToSection('account')"><span class="nav-icon">💝</span><span class="nav-label">마음전하기</span></button>
 </nav>
 
 <script>
