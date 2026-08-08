@@ -274,7 +274,11 @@
     font-weight: 400; cursor: pointer; transition: background 0.3s ease;
   }
   .guestbook-submit:hover { background: var(--sage-500); }
-  .guestbook-messages { display: flex; flex-direction: column; gap: 12px; }
+  .guestbook-messages { display: flex; flex-direction: column; gap: 12px; max-height: 360px; overflow-y: auto; padding-right: 4px; }
+  .guestbook-messages::-webkit-scrollbar { width: 4px; }
+  .guestbook-messages::-webkit-scrollbar-thumb { background: var(--sage-300); border-radius: 4px; }
+  .guestbook-more { width: 100%; margin-top: 16px; padding: 12px; border-radius: 12px; border: 1px solid var(--border-light); background: var(--cream); color: var(--sage-600); font-size: 13px; font-family: 'Noto Sans KR', sans-serif; cursor: pointer; transition: background 0.3s ease; }
+  .guestbook-more:hover { background: var(--highlight-green); }
   .guestbook-msg { background: var(--highlight-green); border-radius: 16px; padding: 16px 20px; text-align: left; border: 1px solid var(--border-light); }
   .guestbook-msg-author { font-size: 12px; font-weight: 500; color: var(--sage-600); margin-bottom: 4px; }
   .guestbook-msg-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
@@ -317,7 +321,7 @@
   .account-toggle .arrow { font-size: 12px; color: var(--sage-400); transition: transform 0.3s ease; }
   .account-toggle.open .arrow { transform: rotate(180deg); }
   .account-details { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
-  .account-details.open { max-height: 200px; }
+  .account-details.open { max-height: 480px; }
   .account-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--border-light); }
   .account-item:last-child { border-bottom: none; }
   .account-info { text-align: left; }
@@ -588,6 +592,7 @@
         <div class="guestbook-msg"><div class="guestbook-msg-author">김영희</div><div class="guestbook-msg-text">결혼 진심으로 축하해! 행복하게 살아~ ☘️</div></div>
         <div class="guestbook-msg"><div class="guestbook-msg-author">이철수</div><div class="guestbook-msg-text">두 분의 앞날에 꽃길만 가득하길!</div></div>
       </div>
+      <button class="guestbook-more" onclick="window.open('guestbook.html','_blank')">방명록 전체보기</button>
     </section>
 
     <!-- RSVP -->
@@ -610,17 +615,21 @@
       <div class="section-divider"><span class="leaf-icon">☘️</span></div>
       <div class="section-label">마음 전하실 곳</div>
       <div class="account-group">
-        <button class="account-toggle" onclick="toggleAccount(this)">신랑 축하하기 <span class="arrow">▼</span></button>
+        <button class="account-toggle" onclick="toggleAccount(this)">신랑측 <span class="arrow">▼</span></button>
         <div class="account-details">
           <div class="account-item"><div class="account-info"><div class="account-bank">카카오뱅크 (김인환)</div><div class="account-number">3333-0213-50218</div></div><button class="copy-btn" onclick="copyAccount('3333021350218')">복사</button></div>
-          <button class="kakao-pay-btn" style="margin-top:12px;" onclick="window.open('https://qr.kakaopay.com/Ej9FdtF1p','_blank')">💛 카카오페이로 보내기</button>
+          <button class="kakao-pay-btn" style="margin:12px 20px 4px; width:calc(100% - 40px);" onclick="window.open('https://qr.kakaopay.com/Ej9FdtF1p','_blank')">💛 카카오페이로 보내기</button>
+          <div class="account-item"><div class="account-info"><div class="account-bank">우리은행 (김대원)</div><div class="account-number">1002065673088</div></div><button class="copy-btn" onclick="copyAccount('1002065673088')">복사</button></div>
+          <div class="account-item"><div class="account-info"><div class="account-bank">우리은행 (안민정)</div><div class="account-number">76006664102101</div></div><button class="copy-btn" onclick="copyAccount('76006664102101')">복사</button></div>
         </div>
       </div>
       <div class="account-group">
-        <button class="account-toggle" onclick="toggleAccount(this)">신부 축하하기 <span class="arrow">▼</span></button>
+        <button class="account-toggle" onclick="toggleAccount(this)">신부측 <span class="arrow">▼</span></button>
         <div class="account-details">
           <div class="account-item"><div class="account-info"><div class="account-bank">신한은행 (박진희)</div><div class="account-number">110-536-795109</div></div><button class="copy-btn" onclick="copyAccount('110536795109')">복사</button></div>
-          <button class="kakao-pay-btn" style="margin-top:12px;" onclick="window.open('https://qr.kakaopay.com/Ej8aV6pAJ','_blank')">💛 카카오페이로 보내기</button>
+          <button class="kakao-pay-btn" style="margin:12px 20px 4px; width:calc(100% - 40px);" onclick="window.open('https://qr.kakaopay.com/Ej8aV6pAJ','_blank')">💛 카카오페이로 보내기</button>
+          <div class="account-item"><div class="account-info"><div class="account-bank">카카오뱅크 (박도상)</div><div class="account-number">3333-17-3289964</div></div><button class="copy-btn" onclick="copyAccount('3333173289964')">복사</button></div>
+          <div class="account-item"><div class="account-info"><div class="account-bank">카카오뱅크 (김은정)</div><div class="account-number">3333-26-7186736</div></div><button class="copy-btn" onclick="copyAccount('3333267186736')">복사</button></div>
         </div>
       </div>
     </section>
@@ -850,14 +859,20 @@
         var container = document.querySelector('.guestbook-messages');
         container.innerHTML = '';
         if (!entries || !entries.length) return;
-        entries.forEach(function(entry) {
+        entries.slice(0, 20).forEach(function(entry) {
           var div = document.createElement('div');
           div.className = 'guestbook-msg';
-          div.innerHTML = '<div class="guestbook-msg-author">' + entry.name + ' <span style="font-size:10px;color:var(--text-light);font-weight:300;">' + entry.date + '</span></div><div class="guestbook-msg-text">' + entry.message + '</div>';
+          div.innerHTML = '<div class="guestbook-msg-author">' + escapeHtml(entry.name) + ' <span style="font-size:10px;color:var(--text-light);font-weight:300;">' + escapeHtml(entry.date) + '</span></div><div class="guestbook-msg-text">' + escapeHtml(entry.message) + '</div>';
           container.appendChild(div);
         });
       })
       .catch(function() {});
+  }
+
+  function escapeHtml(s) {
+    return String(s || '').replace(/[&<>"']/g, function(c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
   }
 
   // === 참석 여부 ===
@@ -970,6 +985,9 @@
   initKakaoSDK();
   window.addEventListener('load', initKakaoSDK);
 
+  // 카카오 공유 링크는 항상 실제 등록 도메인으로 고정 (github.io 미러 등에서 열어도 항상 이 링크로 공유됨)
+  var SITE_URL = 'https://xn--p89ao43bjmc95ate04ls33algay5g.com/';
+
   function shareKakao() {
     if (typeof Kakao === 'undefined') {
       showToast('카카오 SDK를 불러오지 못했습니다');
@@ -990,16 +1008,16 @@
         description: '2027년 2월 27일 토요일 오전 11시\n경기교총웨딩하우스 수원',
         imageUrl: 'https://ghaud21-art.github.io/wedding/thumnail.jpg?v=2',
         link: {
-          mobileWebUrl: window.location.href,
-          webUrl: window.location.href
+          mobileWebUrl: SITE_URL,
+          webUrl: SITE_URL
         }
       },
       buttons: [
         {
           title: '청첩장 보기',
           link: {
-            mobileWebUrl: window.location.href,
-            webUrl: window.location.href
+            mobileWebUrl: SITE_URL,
+            webUrl: SITE_URL
           }
         },
         {
@@ -1012,7 +1030,7 @@
       ]
     });
   }
-  function copyLink() { navigator.clipboard.writeText(window.location.href).then(function() { showToast('링크가 복사되었습니다'); }); }
+  function copyLink() { navigator.clipboard.writeText(SITE_URL).then(function() { showToast('링크가 복사되었습니다'); }); }
 
   // === BGM 플레이어 ===
   var bgmAudio = new Audio('bgm.mp3');

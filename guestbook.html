@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>방명록 전체보기 · 인환 ♥ 진희</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage-300: #98d68a; --sage-400: #6ec05c; --sage-500: #4faa3a; --sage-600: #3d8a2e;
+    --cream: #fffefa; --text-primary: #2d3a2e; --text-secondary: #5c755e; --text-light: #93ad95;
+    --border-light: #dff0db; --highlight-green: #e8f7e4;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Noto Sans KR', sans-serif; font-weight: 300; background: var(--highlight-green); color: var(--text-primary); }
+  .wrap { max-width: 430px; margin: 0 auto; min-height: 100vh; background: var(--cream); padding: 28px 20px 60px; }
+  .header { text-align: center; margin-bottom: 24px; }
+  .header .title { font-size: 15px; font-weight: 500; color: var(--sage-600); letter-spacing: 1px; }
+  .header .sub { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+  .msg { background: var(--highlight-green); border-radius: 16px; padding: 16px 20px; border: 1px solid var(--border-light); margin-bottom: 12px; }
+  .msg-author { font-size: 12px; font-weight: 500; color: var(--sage-600); margin-bottom: 4px; }
+  .msg-date { font-size: 10px; color: var(--text-light); font-weight: 300; margin-left: 6px; }
+  .msg-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; word-break: break-word; }
+  .empty, .loading { text-align: center; color: var(--text-light); font-size: 13px; padding: 60px 0; }
+  .count { text-align: center; font-size: 12px; color: var(--text-light); margin-bottom: 16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="title">☘️ 방명록 전체보기</div>
+    <div class="sub">인환 ♥ 진희 결혼식에 남겨주신 축하 메시지</div>
+  </div>
+  <div class="count" id="count"></div>
+  <div id="list"><div class="loading">불러오는 중...</div></div>
+</div>
+<script>
+  var GAS_API_URL = 'https://script.google.com/macros/s/AKfycbyRISDa7tKTm7uJ9mHyZNIksC9pQ67nox2ptjrhvXxC0bHMse9Xr7-A0aLZIwybJfLt/exec';
+
+  fetch(GAS_API_URL + '?action=getGuestbook')
+    .then(function(r) { return r.json(); })
+    .then(function(entries) {
+      var list = document.getElementById('list');
+      var count = document.getElementById('count');
+      if (!entries || !entries.length) {
+        list.innerHTML = '<div class="empty">아직 등록된 메시지가 없어요</div>';
+        return;
+      }
+      count.textContent = '총 ' + entries.length + '개의 메시지';
+      list.innerHTML = entries.map(function(e) {
+        return '<div class="msg"><div class="msg-author">' + escapeHtml(e.name) + '<span class="msg-date">' + escapeHtml(e.date) + '</span></div><div class="msg-text">' + escapeHtml(e.message) + '</div></div>';
+      }).join('');
+    })
+    .catch(function() {
+      document.getElementById('list').innerHTML = '<div class="empty">불러오기에 실패했습니다</div>';
+    });
+
+  function escapeHtml(s) {
+    return String(s || '').replace(/[&<>"']/g, function(c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+</script>
+</body>
+</html>
