@@ -427,6 +427,29 @@
   .lightbox.loading img { opacity: 0; }
   @keyframes lbSpin { to { transform: rotate(360deg); } }
 
+  /* === 행운의 네잎클로버 이스터에그 === */
+  .clover-modal {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(45, 58, 46, 0.55); z-index: 10001;
+    justify-content: center; align-items: center; padding: 24px;
+  }
+  .clover-modal.active { display: flex; }
+  .clover-modal-card {
+    background: var(--cream); border-radius: 24px; padding: 36px 28px 28px;
+    max-width: 300px; width: 100%; text-align: center; position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25); animation: fadeUp 0.35s ease;
+  }
+  .clover-modal-close {
+    position: absolute; top: 14px; right: 14px; width: 30px; height: 30px; border-radius: 50%;
+    border: none; background: var(--highlight-green); color: var(--sage-600); font-size: 14px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .clover-modal-title { font-size: 16px; font-weight: 500; color: var(--text-primary); line-height: 1.7; margin-bottom: 8px; }
+  .clover-modal-sub { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 24px; }
+  .clover-modal-img { width: 130px; height: 130px; object-fit: contain; cursor: pointer; transition: transform 0.3s ease; }
+  .clover-modal-img:hover { transform: scale(1.08) rotate(-4deg); }
+  .clover-modal-hint { font-size: 11px; color: var(--text-light); margin-top: 14px; letter-spacing: 0.3px; }
+
   /* === Animations === */
   @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes bounceDown { 0%, 100% { transform: rotate(45deg) translateY(0); } 50% { transform: rotate(45deg) translateY(6px); } }
@@ -467,6 +490,17 @@
   <div class="lightbox-spinner"></div>
   <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()" onload="document.getElementById('lightbox').classList.remove('loading')" onerror="document.getElementById('lightbox').classList.remove('loading')">
   <div class="lightbox-name" id="lightboxName" onclick="event.stopPropagation()"></div>
+</div>
+
+<!-- 행운의 네잎클로버 -->
+<div class="clover-modal" id="cloverModal" onclick="closeCloverModal()">
+  <div class="clover-modal-card" onclick="event.stopPropagation()">
+    <button class="clover-modal-close" onclick="closeCloverModal()">✕</button>
+    <div class="clover-modal-title">🍀 당신은 행운의<br>네잎클로버를 발견했습니다!</div>
+    <div class="clover-modal-sub">행운을 주변 사람과 함께<br>나누어보세요!</div>
+    <img class="clover-modal-img" src="clover.png" alt="네잎클로버" onclick="closeCloverModal(); shareKakao();">
+    <div class="clover-modal-hint">클로버를 누르면 카카오톡으로 공유돼요</div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -1117,6 +1151,21 @@
     document.getElementById('lightbox').classList.remove('active');
     document.body.style.overflow = '';
   }
+
+  // === 행운의 네잎클로버 (히어로 사진 더블클릭) ===
+  function openCloverModal() {
+    document.getElementById('cloverModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeCloverModal() {
+    document.getElementById('cloverModal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeCloverModal();
+  });
+  var heroPhotoImg = document.querySelector('.hero-photo img');
+  if (heroPhotoImg) heroPhotoImg.addEventListener('dblclick', openCloverModal);
 
   function showToast(msg) { var t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(function() { t.classList.remove('show'); }, 2000); }
 </script>
