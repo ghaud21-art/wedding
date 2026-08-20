@@ -419,6 +419,13 @@
   .lightbox-name {
     color: white; font-size: 13px; margin-top: 12px; opacity: 0.7;
   }
+  .lightbox-spinner {
+    width: 32px; height: 32px; border: 3px solid rgba(255,255,255,0.25); border-top-color: #fff;
+    border-radius: 50%; animation: lbSpin 0.8s linear infinite; display: none;
+  }
+  .lightbox.loading .lightbox-spinner { display: block; }
+  .lightbox.loading img { opacity: 0; }
+  @keyframes lbSpin { to { transform: rotate(360deg); } }
 
   /* === Animations === */
   @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
@@ -457,8 +464,9 @@
 <!-- Lightbox -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-  <img id="lightboxImg" src="" alt="">
-  <div class="lightbox-name" id="lightboxName"></div>
+  <div class="lightbox-spinner"></div>
+  <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()" onload="document.getElementById('lightbox').classList.remove('loading')" onerror="document.getElementById('lightbox').classList.remove('loading')">
+  <div class="lightbox-name" id="lightboxName" onclick="event.stopPropagation()"></div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -1096,11 +1104,15 @@
   // === 사진 확대 보기 (Lightbox) ===
   function openLightbox(src, caption) {
     var lb = document.getElementById('lightbox');
+    lb.classList.add('loading');
     document.getElementById('lightboxImg').src = src;
     document.getElementById('lightboxName').textContent = caption || '';
     lb.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
   function closeLightbox() {
     document.getElementById('lightbox').classList.remove('active');
     document.body.style.overflow = '';
