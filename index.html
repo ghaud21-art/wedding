@@ -106,12 +106,34 @@
     margin-bottom: 32px; font-weight: 400;
     opacity: 0; animation: fadeUp 1s ease 0.3s forwards; z-index: 1; position: relative;
   }
+  .hero-photo-frame {
+    position: relative; z-index: 1; margin-bottom: 32px;
+    padding: 14px 14px 18px;
+    border: 1.5px solid rgba(110, 192, 92, 0.5);
+    border-radius: 160px 160px 28px 28px;
+    opacity: 0; animation: fadeUp 1s ease 0.5s forwards;
+  }
+  .hero-photo-frame::before {
+    content: ''; position: absolute; inset: 5px;
+    border: 1px solid rgba(110, 192, 92, 0.28);
+    border-radius: 152px 152px 24px 24px;
+    pointer-events: none;
+  }
+  .hero-photo-frame .frame-clover {
+    position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+    font-size: 15px; line-height: 1; z-index: 2; padding: 2px 7px;
+    background: #f4faf0; border-radius: 50%;
+  }
+  .hero-photo-frame .frame-heart {
+    position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+    font-size: 13px; line-height: 1; z-index: 2; color: var(--sage-400);
+    padding: 1px 7px; background: #f6fbf2; border-radius: 50%;
+  }
   .hero-photo {
     width: 220px; height: 300px; border-radius: 140px 140px 20px 20px;
     background: linear-gradient(145deg, var(--sage-100), #e8f7e4, #fef0e8);
-    margin-bottom: 32px; position: relative; z-index: 1; overflow: hidden;
+    position: relative; z-index: 1; overflow: hidden;
     display: flex; align-items: center; justify-content: center;
-    opacity: 0; animation: fadeUp 1s ease 0.5s forwards;
     box-shadow: 0 16px 48px rgba(79, 170, 58, 0.1), 0 4px 16px rgba(0,0,0,0.04);
   }
   .hero-photo img {
@@ -486,7 +508,11 @@
         <div class="bars"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
       </div>
       <div class="hero-top-text">☘️ 결혼식에 초대합니다 ☘️</div>
-      <div class="hero-photo"><img src="thumnail.jpg?v=2" alt="인환 ♥ 진희"></div>
+      <div class="hero-photo-frame">
+        <span class="frame-clover">☘️</span>
+        <div class="hero-photo"><img src="thumnail.jpg?v=2" alt="인환 ♥ 진희"></div>
+        <span class="frame-heart">♡</span>
+      </div>
       <div class="hero-names">인환 <span class="ampersand">&</span> 진희</div>
       <div class="hero-date">2027. 02. 27 토요일 오전 11시</div>
       <div class="hero-venue-hint">경기교총웨딩하우스 수원</div>
