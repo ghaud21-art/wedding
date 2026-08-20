@@ -89,6 +89,7 @@
     font-size: 13px; letter-spacing: 1.5px; color: var(--sage-500);
     text-align: center; margin-bottom: 28px; font-weight: 500;
   }
+  .greeting-intro-img { max-width: 100%; height: auto; display: block; margin: 0 auto 8px; }
 
   /* === Hero === */
   .hero {
@@ -96,25 +97,8 @@
     min-height: 100dvh;
     display: flex; flex-direction: column; justify-content: center; align-items: center;
     text-align: center; padding: 80px 28px 120px;
-    background: linear-gradient(170deg, #edfce8 0%, #f8fff5 30%, var(--cream) 60%, #fef8f0 100%);
+    background: url('hero-bg.png') center / cover no-repeat, var(--cream);
     position: relative; overflow: hidden;
-  }
-  .hero::before {
-    content: ''; position: absolute; top: -80px; right: -60px;
-    width: 300px; height: 300px;
-    background: radial-gradient(circle, rgba(110, 192, 92, 0.15) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-  .hero::after {
-    content: ''; position: absolute; bottom: 80px; left: -50px;
-    width: 260px; height: 260px;
-    background: radial-gradient(circle, rgba(255, 210, 160, 0.2) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-  .hero-blob-extra {
-    position: absolute; top: 40%; right: -30px; width: 200px; height: 200px;
-    background: radial-gradient(circle, rgba(168, 230, 150, 0.12) 0%, transparent 70%);
-    border-radius: 50%; z-index: 0;
   }
 
   .hero-top-text {
@@ -134,12 +118,6 @@
     width: 100%; height: 100%; object-fit: cover; object-position: center top;
   }
   .hero-photo-placeholder { font-size: 12px; color: var(--sage-400); letter-spacing: 1px; font-weight: 400; }
-
-  .hero-leaf { position: absolute; font-size: 22px; opacity: 0.25; z-index: 0; }
-  .hero-leaf:nth-child(1) { top: 12%; left: 6%; transform: rotate(-30deg); animation: floatLeaf 6s ease-in-out infinite; }
-  .hero-leaf:nth-child(2) { top: 22%; right: 8%; transform: rotate(20deg); animation: floatLeaf 7s ease-in-out 1s infinite; }
-  .hero-leaf:nth-child(3) { bottom: 22%; left: 10%; transform: rotate(45deg); animation: floatLeaf 5s ease-in-out 0.5s infinite; }
-  .hero-leaf:nth-child(4) { bottom: 34%; right: 6%; transform: rotate(-15deg); animation: floatLeaf 8s ease-in-out 2s infinite; }
 
   .hero-names {
     font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 300;
@@ -171,12 +149,7 @@
 
   /* === Greeting === */
   .greeting { background: var(--warm-white); text-align: center; }
-  .greeting-text {
-    font-size: 15px; line-height: 2.2; color: var(--text-secondary);
-    font-weight: 300; max-width: 300px; margin: 0 auto; word-break: keep-all;
-  }
-  .greeting-text .highlight { color: var(--sage-500); font-weight: 400; }
-  .greeting-text .accent { color: var(--sage-500); font-weight: 600; font-size: 1.2em; }
+  .highlight { color: var(--sage-500); font-weight: 400; }
   .greeting-parents { margin-top: 36px; font-size: 13px; color: var(--text-light); line-height: 2; }
 
   /* === D-Day === */
@@ -453,7 +426,6 @@
   /* === Animations === */
   @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes bounceDown { 0%, 100% { transform: rotate(45deg) translateY(0); } 50% { transform: rotate(45deg) translateY(6px); } }
-  @keyframes floatLeaf { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
   .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
   .fade-in.visible { opacity: 1; transform: translateY(0); }
 
@@ -513,12 +485,6 @@
       <div class="bgm-toggle" id="bgmToggle" onclick="toggleBGM()">
         <div class="bars"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
       </div>
-      <div class="hero-blob-extra"></div>
-      <div class="hero-leaf">☘️</div>
-      <div class="hero-leaf">☘️</div>
-      <div class="hero-leaf">☘️</div>
-      <div class="hero-leaf">☘️</div>
-
       <div class="hero-top-text">☘️ 결혼식에 초대합니다 ☘️</div>
       <div class="hero-photo"><img src="thumnail.jpg?v=2" alt="인환 ♥ 진희"></div>
       <div class="hero-names">인환 <span class="ampersand">&</span> 진희</div>
@@ -534,12 +500,7 @@
     <!-- GREETING -->
     <section class="section greeting fade-in" id="greeting">
       <div class="section-divider"><span class="leaf-icon">☘️</span></div>
-      <div class="section-label">초대합니다</div>
-      <p class="greeting-text">
-        <span class="accent">클</span>로버로 이어진 우리가<br>
-        <span class="accent">로</span>드맵을 함께 만들며 걸어나가겠습니다.<br>
-        <span class="accent">버</span>팀목이 되어 함께 잘 살겠습니다.
-      </p>
+      <img class="greeting-intro-img" src="greeting-intro.png" alt="초대합니다 - 클로버로 이어진 우리가 로드맵을 함께 만들며 걸어나가겠습니다 버팀목이 되어 함께 잘 살겠습니다">
       <div class="greeting-parents">
         김대원 · 안민정 의 장남 <span class="highlight">인환</span><br>
         박도상 · 김은정 의 장녀 <span class="highlight">진희</span>
