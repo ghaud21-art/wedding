@@ -9,57 +9,240 @@
   :root {
     --sage-300: #98d68a; --sage-400: #6ec05c; --sage-500: #4faa3a; --sage-600: #3d8a2e;
     --cream: #fffefa; --text-primary: #2d3a2e; --text-secondary: #5c755e; --text-light: #93ad95;
-    --border-light: #dff0db; --highlight-green: #e8f7e4;
+    --border-light: #dff0db; --highlight-green: #e8f7e4; --soft-green-bg: #f7fcf5;
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body { font-family: 'Noto Sans KR', sans-serif; font-weight: 300; background: var(--highlight-green); color: var(--text-primary); }
-  .wrap { max-width: 430px; margin: 0 auto; min-height: 100vh; background: var(--cream); padding: 28px 20px 60px; }
-  .header { text-align: center; margin-bottom: 24px; }
-  .header .title { font-size: 15px; font-weight: 500; color: var(--sage-600); letter-spacing: 1px; }
-  .header .sub { font-size: 12px; color: var(--text-light); margin-top: 4px; }
-  .msg { background: var(--highlight-green); border-radius: 16px; padding: 16px 20px; border: 1px solid var(--border-light); margin-bottom: 12px; }
-  .msg-author { font-size: 12px; font-weight: 500; color: var(--sage-600); margin-bottom: 4px; }
-  .msg-date { font-size: 10px; color: var(--text-light); font-weight: 300; margin-left: 6px; }
-  .msg-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; word-break: break-word; }
-  .empty, .loading { text-align: center; color: var(--text-light); font-size: 13px; padding: 60px 0; }
-  .count { text-align: center; font-size: 12px; color: var(--text-light); margin-bottom: 16px; }
+  .wrap { max-width: 430px; margin: 0 auto; min-height: 100vh; background: var(--cream); padding: 0 16px 60px; }
+
+  .topbar {
+    display: flex; align-items: center; gap: 8px; padding: 16px 4px 12px;
+    position: sticky; top: 0; background: var(--cream); z-index: 10;
+  }
+  .back-btn {
+    width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border-light);
+    background: var(--soft-green-bg); color: var(--sage-600); font-size: 18px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .topbar-title { font-size: 15px; font-weight: 500; color: var(--sage-600); letter-spacing: 1px; }
+  .count { font-size: 11px; color: var(--text-light); margin-left: auto; padding-right: 4px; }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .letter-card {
+    aspect-ratio: 1; background: url('letter.png') center / contain no-repeat;
+    position: relative; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 26% 20% 30%;
+    cursor: pointer;
+  }
+  .letter-msg {
+    font-size: 9.5px; color: var(--text-primary); line-height: 1.55; text-align: center;
+    word-break: keep-all; overflow: hidden; display: -webkit-box;
+    -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+  }
+  .letter-from { margin-top: 4px; font-size: 8px; color: var(--text-secondary); }
+  .empty, .loading { text-align: center; color: var(--text-light); font-size: 13px; padding: 80px 0; grid-column: 1 / -1; }
+
+  /* 편지 상세 모달 */
+  .detail-modal, .edit-modal {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(45, 58, 46, 0.55); z-index: 100;
+    justify-content: center; align-items: center; padding: 24px;
+  }
+  .detail-modal.active, .edit-modal.active { display: flex; }
+  .detail-letter {
+    width: min(88vw, 360px); aspect-ratio: 1;
+    background: url('letter.png') center / contain no-repeat;
+    position: relative; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 18% 16% 22%;
+    animation: pop 0.3s ease;
+  }
+  @keyframes pop { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+  .detail-msg {
+    font-size: 13.5px; color: var(--text-primary); line-height: 1.8; text-align: center;
+    word-break: keep-all; overflow-y: auto; max-height: 100%;
+  }
+  .detail-from { margin-top: 12px; font-size: 12px; color: var(--text-secondary); }
+  .detail-date { font-size: 10px; color: var(--text-light); margin-top: 2px; letter-spacing: 0.5px; }
+  .detail-edit {
+    position: absolute; bottom: 16%; right: 15%; width: 30px; height: 30px; border-radius: 50%;
+    border: 1px solid var(--border-light); background: rgba(255,255,255,0.9); color: var(--sage-500);
+    font-size: 13px; cursor: pointer;
+  }
+
+  .modal-card {
+    background: var(--cream); border-radius: 20px; padding: 28px 24px;
+    max-width: 320px; width: 100%; position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25); animation: pop 0.3s ease;
+  }
+  .modal-title { font-size: 15px; font-weight: 500; text-align: center; margin-bottom: 18px; }
+  .modal-close {
+    position: absolute; top: 12px; right: 12px; width: 30px; height: 30px; border-radius: 50%;
+    border: none; background: var(--highlight-green); color: var(--sage-600); font-size: 14px; cursor: pointer;
+  }
+  .inp {
+    width: 100%; border: 1px solid var(--border-light); background: var(--soft-green-bg);
+    border-radius: 12px; padding: 12px 16px; font-size: 13px; font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300; color: var(--text-primary); outline: none; margin-bottom: 8px;
+  }
+  .inp:focus { border-color: var(--sage-300); }
+  textarea.inp { resize: none; height: 90px; }
+  .submit-btn {
+    width: 100%; padding: 12px; background: var(--sage-400); color: white; border: none;
+    border-radius: 12px; font-size: 13px; font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400; cursor: pointer; margin-top: 4px;
+  }
+  .toast {
+    position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--text-primary); color: white; padding: 12px 24px; border-radius: 12px;
+    font-size: 13px; z-index: 999; opacity: 0; transition: all 0.3s ease; pointer-events: none;
+    max-width: 300px; text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="header">
-    <div class="title">☘️ 방명록 전체보기</div>
-    <div class="sub">인환 ♥ 진희 결혼식에 남겨주신 축하 메시지</div>
+  <div class="topbar">
+    <button class="back-btn" onclick="goBack()">‹</button>
+    <div class="topbar-title">☘️ 방명록 전체보기</div>
+    <div class="count" id="count"></div>
   </div>
-  <div class="count" id="count"></div>
-  <div id="list"><div class="loading">불러오는 중...</div></div>
+  <div class="grid" id="grid"><div class="loading">불러오는 중...</div></div>
 </div>
+
+<!-- 편지 상세 -->
+<div class="detail-modal" id="detailModal" onclick="closeDetail()">
+  <div class="detail-letter" onclick="event.stopPropagation()">
+    <div class="detail-msg" id="detailMsg"></div>
+    <div class="detail-from" id="detailFrom"></div>
+    <div class="detail-date" id="detailDate"></div>
+    <button class="detail-edit" id="detailEditBtn" onclick="openEdit()">✎</button>
+  </div>
+</div>
+
+<!-- 수정 모달 -->
+<div class="edit-modal" id="editModal" onclick="closeEdit()">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeEdit()">✕</button>
+    <div class="modal-title">✏️ 메시지 수정</div>
+    <input type="text" class="inp" id="editName" placeholder="이름">
+    <textarea class="inp" id="editMessage" placeholder="메시지"></textarea>
+    <input type="password" class="inp" id="editPassword" inputmode="numeric" maxlength="10" placeholder="작성 시 입력한 비밀번호">
+    <button class="submit-btn" id="editSubmit" onclick="submitEdit()">수정하기</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
   var GAS_API_URL = 'https://script.google.com/macros/s/AKfycbyRISDa7tKTm7uJ9mHyZNIksC9pQ67nox2ptjrhvXxC0bHMse9Xr7-A0aLZIwybJfLt/exec';
+  var entries = [];
+  var current = null;
 
-  fetch(GAS_API_URL + '?action=getGuestbook')
-    .then(function(r) { return r.json(); })
-    .then(function(entries) {
-      var list = document.getElementById('list');
-      var count = document.getElementById('count');
-      if (!entries || !entries.length) {
-        list.innerHTML = '<div class="empty">아직 등록된 메시지가 없어요</div>';
-        return;
-      }
-      count.textContent = '총 ' + entries.length + '개의 메시지';
-      list.innerHTML = entries.map(function(e) {
-        return '<div class="msg"><div class="msg-author">' + escapeHtml(e.name) + '<span class="msg-date">' + escapeHtml(e.date) + '</span></div><div class="msg-text">' + escapeHtml(e.message) + '</div></div>';
-      }).join('');
-    })
-    .catch(function() {
-      document.getElementById('list').innerHTML = '<div class="empty">불러오기에 실패했습니다</div>';
-    });
+  function goBack() {
+    if (history.length > 1) history.back();
+    else location.href = 'index.html';
+  }
 
   function escapeHtml(s) {
     return String(s || '').replace(/[&<>"']/g, function(c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2000);
+  }
+
+  function load() {
+    fetch(GAS_API_URL + '?action=getGuestbook')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        entries = data || [];
+        var grid = document.getElementById('grid');
+        grid.innerHTML = '';
+        document.getElementById('count').textContent = entries.length ? '총 ' + entries.length + '개' : '';
+        if (!entries.length) {
+          grid.innerHTML = '<div class="empty">아직 등록된 메시지가 없어요 ☘️</div>';
+          return;
+        }
+        entries.forEach(function(e, i) {
+          var div = document.createElement('div');
+          div.className = 'letter-card';
+          div.onclick = function() { openDetail(i); };
+          div.innerHTML = '<div class="letter-msg">' + escapeHtml(e.message) + '</div>' +
+            '<div class="letter-from">' + escapeHtml(e.name) + '</div>';
+          grid.appendChild(div);
+        });
+      })
+      .catch(function() {
+        document.getElementById('grid').innerHTML = '<div class="empty">불러오기에 실패했습니다</div>';
+      });
+  }
+
+  function openDetail(i) {
+    current = entries[i];
+    document.getElementById('detailMsg').textContent = current.message;
+    document.getElementById('detailFrom').textContent = 'from. ' + current.name;
+    document.getElementById('detailDate').textContent = current.date;
+    document.getElementById('detailEditBtn').style.display = current.id ? 'block' : 'none';
+    document.getElementById('detailModal').classList.add('active');
+  }
+  function closeDetail() {
+    document.getElementById('detailModal').classList.remove('active');
+  }
+
+  function openEdit() {
+    if (!current || !current.id) return;
+    closeDetail();
+    document.getElementById('editName').value = current.name;
+    document.getElementById('editMessage').value = current.message;
+    document.getElementById('editPassword').value = '';
+    document.getElementById('editModal').classList.add('active');
+  }
+  function closeEdit() {
+    document.getElementById('editModal').classList.remove('active');
+  }
+
+  function submitEdit() {
+    if (!current) return;
+    var name = document.getElementById('editName').value.trim();
+    var message = document.getElementById('editMessage').value.trim();
+    var password = document.getElementById('editPassword').value.trim();
+    if (!name || !message) { showToast('이름과 메시지를 입력해주세요'); return; }
+    if (!password) { showToast('비밀번호를 입력해주세요'); return; }
+
+    var btn = document.getElementById('editSubmit');
+    btn.disabled = true; btn.textContent = '수정 중...';
+    fetch(GAS_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'editGuestbook', id: current.id, password: password, name: name, message: message })
+    })
+      .then(function(r) { return r.json(); })
+      .then(function(result) {
+        btn.disabled = false; btn.textContent = '수정하기';
+        if (result.success) {
+          showToast('메시지가 수정되었습니다 ☘️');
+          closeEdit();
+          load();
+        } else {
+          showToast(result.error || '수정에 실패했습니다');
+        }
+      })
+      .catch(function() {
+        btn.disabled = false; btn.textContent = '수정하기';
+        showToast('오류가 발생했습니다');
+      });
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { closeDetail(); closeEdit(); }
+  });
+
+  load();
 </script>
 </body>
 </html>

@@ -273,14 +273,52 @@
     font-weight: 400; cursor: pointer; transition: background 0.3s ease;
   }
   .guestbook-submit:hover { background: var(--sage-500); }
-  .guestbook-messages { display: flex; flex-direction: column; gap: 12px; max-height: 360px; overflow-y: auto; padding-right: 4px; }
-  .guestbook-messages::-webkit-scrollbar { width: 4px; }
-  .guestbook-messages::-webkit-scrollbar-thumb { background: var(--sage-300); border-radius: 4px; }
+  /* 편지 캐러셀 */
+  .guestbook-letters {
+    display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory;
+    padding: 4px 2px 10px; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .guestbook-letters::-webkit-scrollbar { display: none; }
+  .letter-card {
+    flex: 0 0 250px; width: 250px; aspect-ratio: 1; scroll-snap-align: center;
+    background: url('letter.png') center / contain no-repeat;
+    position: relative; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 56px 46px 66px;
+  }
+  .letter-msg {
+    font-size: 12.5px; color: var(--text-primary); line-height: 1.75; text-align: center;
+    word-break: keep-all; overflow: hidden; display: -webkit-box;
+    -webkit-line-clamp: 5; -webkit-box-orient: vertical;
+  }
+  .letter-from { margin-top: 10px; font-size: 11px; color: var(--text-secondary); font-weight: 400; }
+  .letter-date { font-size: 9px; color: var(--text-light); margin-top: 2px; letter-spacing: 0.5px; }
+  .letter-edit {
+    position: absolute; bottom: 52px; right: 44px; width: 26px; height: 26px; border-radius: 50%;
+    border: 1px solid var(--border-light); background: rgba(255,255,255,0.85); color: var(--sage-500);
+    font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .guestbook-swipe-hint { font-size: 10px; color: var(--text-light); margin-top: 2px; letter-spacing: 1px; }
   .guestbook-more { width: 100%; margin-top: 16px; padding: 12px; border-radius: 12px; border: 1px solid var(--border-light); background: var(--cream); color: var(--sage-600); font-size: 13px; font-family: 'Noto Sans KR', sans-serif; cursor: pointer; transition: background 0.3s ease; }
   .guestbook-more:hover { background: var(--highlight-green); }
-  .guestbook-msg { background: var(--highlight-green); border-radius: 16px; padding: 16px 20px; text-align: left; border: 1px solid var(--border-light); }
-  .guestbook-msg-author { font-size: 12px; font-weight: 500; color: var(--sage-600); margin-bottom: 4px; }
-  .guestbook-msg-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+  /* 방명록 수정 모달 */
+  .gb-modal {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(45, 58, 46, 0.55); z-index: 10002;
+    justify-content: center; align-items: center; padding: 24px;
+  }
+  .gb-modal.active { display: flex; }
+  .gb-modal-card {
+    background: var(--cream); border-radius: 20px; padding: 28px 24px;
+    max-width: 320px; width: 100%; position: relative; text-align: left;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25); animation: fadeUp 0.3s ease;
+  }
+  .gb-modal-title { font-size: 15px; font-weight: 500; color: var(--text-primary); text-align: center; margin-bottom: 18px; }
+  .gb-modal-close {
+    position: absolute; top: 12px; right: 12px; width: 30px; height: 30px; border-radius: 50%;
+    border: none; background: var(--highlight-green); color: var(--sage-600); font-size: 14px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
 
   /* === RSVP === */
   .rsvp { background: var(--warm-white); text-align: center; }
@@ -426,6 +464,20 @@
   .lightbox.loading .lightbox-spinner { display: block; }
   .lightbox.loading img { opacity: 0; }
   @keyframes lbSpin { to { transform: rotate(360deg); } }
+  .lightbox-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 42px; height: 42px; border-radius: 50%; border: none;
+    background: rgba(255,255,255,0.15); color: white; font-size: 26px; line-height: 1;
+    cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 2;
+  }
+  .lightbox-nav.prev { left: 12px; }
+  .lightbox-nav.next { right: 12px; }
+  .lightbox.has-nav .lightbox-nav { display: flex; }
+  .lightbox-counter {
+    position: absolute; bottom: 24px; left: 0; right: 0; text-align: center;
+    color: rgba(255,255,255,0.7); font-size: 12px; letter-spacing: 1px; display: none;
+  }
+  .lightbox.has-nav .lightbox-counter { display: block; }
 
   /* === 행운의 네잎클로버 이스터에그 === */
   .clover-modal {
@@ -489,6 +541,9 @@
   <div class="lightbox-spinner"></div>
   <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()" onload="document.getElementById('lightbox').classList.remove('loading')" onerror="document.getElementById('lightbox').classList.remove('loading')">
   <div class="lightbox-name" id="lightboxName" onclick="event.stopPropagation()"></div>
+  <button class="lightbox-nav prev" id="lbPrev" onclick="event.stopPropagation(); lbNav(-1);">‹</button>
+  <button class="lightbox-nav next" id="lbNext" onclick="event.stopPropagation(); lbNav(1);">›</button>
+  <div class="lightbox-counter" id="lbCounter" onclick="event.stopPropagation()"></div>
 </div>
 
 <!-- 행운의 네잎클로버 -->
@@ -499,6 +554,18 @@
     <div class="clover-modal-sub">행운을 주변 사람과 함께<br>나누어보세요!</div>
     <img class="clover-modal-img" src="clover.png" alt="네잎클로버" onclick="closeCloverModal(); shareKakao();">
     <div class="clover-modal-hint">클로버를 누르면 카카오톡으로 청첩장이 공유돼요</div>
+  </div>
+</div>
+
+<!-- 방명록 수정 모달 -->
+<div class="gb-modal" id="gbEditModal" onclick="closeGbEdit()">
+  <div class="gb-modal-card" onclick="event.stopPropagation()">
+    <button class="gb-modal-close" onclick="closeGbEdit()">✕</button>
+    <div class="gb-modal-title">✏️ 메시지 수정</div>
+    <input type="text" class="guestbook-input" id="gbEditName" placeholder="이름">
+    <textarea class="guestbook-textarea" id="gbEditMessage" placeholder="메시지"></textarea>
+    <input type="password" class="guestbook-input" id="gbEditPassword" inputmode="numeric" maxlength="10" placeholder="작성 시 입력한 비밀번호">
+    <button class="guestbook-submit" id="gbEditSubmit" onclick="submitGbEdit()">수정하기</button>
   </div>
 </div>
 
@@ -628,15 +695,14 @@
       <div class="section-divider"><span class="leaf-icon">☘️</span></div>
       <div class="section-label">방명록</div>
       <div class="guestbook-form">
-        <input type="text" class="guestbook-input" placeholder="이름">
-        <textarea class="guestbook-textarea" placeholder="축하 메시지를 남겨주세요 ☘️"></textarea>
+        <input type="text" class="guestbook-input" id="gbName" placeholder="이름">
+        <textarea class="guestbook-textarea" id="gbMessage" placeholder="축하 메시지를 남겨주세요 ☘️"></textarea>
+        <input type="password" class="guestbook-input" id="gbPassword" inputmode="numeric" maxlength="10" placeholder="수정용 비밀번호 (숫자 4자리 권장)">
         <button class="guestbook-submit" onclick="submitGuestbook()">등록하기</button>
       </div>
-      <div class="guestbook-messages">
-        <div class="guestbook-msg"><div class="guestbook-msg-author">김영희</div><div class="guestbook-msg-text">결혼 진심으로 축하해! 행복하게 살아~ ☘️</div></div>
-        <div class="guestbook-msg"><div class="guestbook-msg-author">이철수</div><div class="guestbook-msg-text">두 분의 앞날에 꽃길만 가득하길!</div></div>
-      </div>
-      <button class="guestbook-more" onclick="window.open('guestbook.html','_blank')">방명록 전체보기</button>
+      <div class="guestbook-letters" id="guestbookLetters"></div>
+      <div class="guestbook-swipe-hint">← 옆으로 넘겨보세요 →</div>
+      <button class="guestbook-more" onclick="location.href='guestbook.html'">방명록 전체보기</button>
     </section>
 
     <!-- RSVP -->
@@ -853,7 +919,11 @@
           div.style.backgroundSize = 'cover';
           div.style.backgroundPosition = 'center';
           div.style.cursor = 'pointer';
-          div.onclick = function() { openLightbox(photo.fullUrl); };
+          div.onclick = (function(idx, list) {
+            return function() {
+              openLightboxAt(list.map(function(p) { return { src: p.fullUrl, caption: '' }; }), idx);
+            };
+          })(photos.indexOf(photo), photos);
           grid.appendChild(div);
         });
       })
@@ -890,17 +960,20 @@
 
   // === 방명록 ===
   function submitGuestbook() {
-    var nameInput = document.querySelector('.guestbook-input');
-    var msgInput = document.querySelector('.guestbook-textarea');
+    var nameInput = document.getElementById('gbName');
+    var msgInput = document.getElementById('gbMessage');
+    var pwInput = document.getElementById('gbPassword');
     var name = nameInput.value.trim();
     var message = msgInput.value.trim();
+    var password = pwInput.value.trim();
     if (!name || !message) { showToast('이름과 메시지를 모두 입력해주세요'); return; }
+    if (!password) { showToast('수정용 비밀번호를 입력해주세요'); return; }
 
     var btn = document.querySelector('.guestbook-submit');
     btn.disabled = true;
     btn.textContent = '등록 중...';
 
-    apiPost({ action: 'submitGuestbook', name: name, message: message })
+    apiPost({ action: 'submitGuestbook', name: name, message: message, password: password })
       .then(function(result) {
         btn.disabled = false;
         btn.textContent = '등록하기';
@@ -908,6 +981,7 @@
           showToast('축하 메시지가 등록되었습니다 ☘️');
           nameInput.value = '';
           msgInput.value = '';
+          pwInput.value = '';
           loadGuestbook();
         } else {
           showToast('등록 실패: ' + (result.error || ''));
@@ -920,20 +994,75 @@
       });
   }
 
+  var gbEntries = [];
   function loadGuestbook() {
     apiGet('getGuestbook')
       .then(function(entries) {
-        var container = document.querySelector('.guestbook-messages');
+        gbEntries = entries || [];
+        var container = document.getElementById('guestbookLetters');
         container.innerHTML = '';
-        if (!entries || !entries.length) return;
-        entries.slice(0, 20).forEach(function(entry) {
+        if (!gbEntries.length) {
+          container.innerHTML = '<div class="letter-card"><div class="letter-msg">아직 메시지가 없어요.<br>첫 번째 축하 편지를 남겨주세요 ☘️</div></div>';
+          return;
+        }
+        gbEntries.forEach(function(entry, i) {
           var div = document.createElement('div');
-          div.className = 'guestbook-msg';
-          div.innerHTML = '<div class="guestbook-msg-author">' + escapeHtml(entry.name) + ' <span style="font-size:10px;color:var(--text-light);font-weight:300;">' + escapeHtml(entry.date) + '</span></div><div class="guestbook-msg-text">' + escapeHtml(entry.message) + '</div>';
+          div.className = 'letter-card';
+          var editBtn = entry.id ? '<button class="letter-edit" onclick="openGbEdit(' + i + ')">✎</button>' : '';
+          div.innerHTML = '<div class="letter-msg">' + escapeHtml(entry.message) + '</div>' +
+            '<div class="letter-from">from. ' + escapeHtml(entry.name) + '</div>' +
+            '<div class="letter-date">' + escapeHtml(entry.date) + '</div>' + editBtn;
           container.appendChild(div);
         });
       })
       .catch(function() {});
+  }
+
+  // === 방명록 수정 ===
+  var gbEditTarget = null;
+  function openGbEdit(i) {
+    var entry = gbEntries[i];
+    if (!entry || !entry.id) return;
+    gbEditTarget = entry;
+    document.getElementById('gbEditName').value = entry.name;
+    document.getElementById('gbEditMessage').value = entry.message;
+    document.getElementById('gbEditPassword').value = '';
+    document.getElementById('gbEditModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeGbEdit() {
+    document.getElementById('gbEditModal').classList.remove('active');
+    document.body.style.overflow = '';
+    gbEditTarget = null;
+  }
+  function submitGbEdit() {
+    if (!gbEditTarget) return;
+    var name = document.getElementById('gbEditName').value.trim();
+    var message = document.getElementById('gbEditMessage').value.trim();
+    var password = document.getElementById('gbEditPassword').value.trim();
+    if (!name || !message) { showToast('이름과 메시지를 입력해주세요'); return; }
+    if (!password) { showToast('비밀번호를 입력해주세요'); return; }
+
+    var btn = document.getElementById('gbEditSubmit');
+    btn.disabled = true;
+    btn.textContent = '수정 중...';
+    apiPost({ action: 'editGuestbook', id: gbEditTarget.id, password: password, name: name, message: message })
+      .then(function(result) {
+        btn.disabled = false;
+        btn.textContent = '수정하기';
+        if (result.success) {
+          showToast('메시지가 수정되었습니다 ☘️');
+          closeGbEdit();
+          loadGuestbook();
+        } else {
+          showToast(result.error || '수정에 실패했습니다');
+        }
+      })
+      .catch(function() {
+        btn.disabled = false;
+        btn.textContent = '수정하기';
+        showToast('오류가 발생했습니다');
+      });
   }
 
   function escapeHtml(s) {
@@ -1020,7 +1149,11 @@
           div.style.backgroundSize = 'cover';
           div.style.backgroundPosition = 'center';
           div.style.cursor = 'pointer';
-          div.onclick = function() { openLightbox(photo.thumbnailUrl.replace('sz=w400','sz=w1200')); };
+          div.onclick = (function(idx, list) {
+            return function() {
+              openLightboxAt(list.map(function(p) { return { src: p.thumbnailUrl.replace('sz=w400','sz=w1200'), caption: '' }; }), idx);
+            };
+          })(photos.indexOf(photo), photos);
           grid.appendChild(div);
         });
       })
@@ -1134,16 +1267,57 @@
   }, { once: false });
 
   // === 사진 확대 보기 (Lightbox) ===
-  function openLightbox(src, caption) {
+  var lbList = null, lbIndex = -1;
+
+  function showLightboxImage(src, caption) {
     var lb = document.getElementById('lightbox');
     lb.classList.add('loading');
     document.getElementById('lightboxImg').src = src;
     document.getElementById('lightboxName').textContent = caption || '';
     lb.classList.add('active');
     document.body.style.overflow = 'hidden';
+    var counter = document.getElementById('lbCounter');
+    if (lbList && lbList.length > 1) {
+      lb.classList.add('has-nav');
+      counter.textContent = (lbIndex + 1) + ' / ' + lbList.length;
+    } else {
+      lb.classList.remove('has-nav');
+      counter.textContent = '';
+    }
   }
+
+  function openLightbox(src, caption) {
+    lbList = null; lbIndex = -1;
+    showLightboxImage(src, caption);
+  }
+
+  function openLightboxAt(list, index) {
+    lbList = list; lbIndex = index;
+    showLightboxImage(list[index].src, list[index].caption);
+  }
+
+  function lbNav(dir) {
+    if (!lbList || lbList.length < 2) return;
+    lbIndex = (lbIndex + dir + lbList.length) % lbList.length;
+    showLightboxImage(lbList[lbIndex].src, lbList[lbIndex].caption);
+  }
+
+  // 스와이프로 이전/다음 사진 넘기기
+  var lbTouchX = null;
+  document.getElementById('lightbox').addEventListener('touchstart', function(e) {
+    if (e.touches.length === 1) lbTouchX = e.touches[0].clientX;
+  }, { passive: true });
+  document.getElementById('lightbox').addEventListener('touchend', function(e) {
+    if (lbTouchX === null) return;
+    var dx = e.changedTouches[0].clientX - lbTouchX;
+    lbTouchX = null;
+    if (Math.abs(dx) > 40) lbNav(dx < 0 ? 1 : -1);
+  }, { passive: true });
+
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') lbNav(-1);
+    if (e.key === 'ArrowRight') lbNav(1);
   });
   function closeLightbox() {
     document.getElementById('lightbox').classList.remove('active');
