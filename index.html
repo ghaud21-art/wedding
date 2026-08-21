@@ -1000,11 +1000,10 @@
       .then(function(entries) {
         gbEntries = entries || [];
         var container = document.getElementById('guestbookLetters');
+        var hint = document.querySelector('.guestbook-swipe-hint');
         container.innerHTML = '';
-        if (!gbEntries.length) {
-          container.innerHTML = '<div class="letter-card"><div class="letter-msg">아직 메시지가 없어요.<br>첫 번째 축하 편지를 남겨주세요 ☘️</div></div>';
-          return;
-        }
+        if (hint) hint.style.display = gbEntries.length ? '' : 'none';
+        if (!gbEntries.length) return;
         gbEntries.forEach(function(entry, i) {
           var div = document.createElement('div');
           div.className = 'letter-card';
