@@ -89,7 +89,6 @@
     font-size: 13px; letter-spacing: 1.5px; color: var(--sage-500);
     text-align: center; margin-bottom: 28px; font-weight: 500;
   }
-  .greeting-intro-img { max-width: 100%; height: auto; display: block; margin: 0 auto 8px; }
 
   /* === Hero === */
   .hero {
@@ -171,7 +170,12 @@
 
   /* === Greeting === */
   .greeting { background: var(--warm-white); text-align: center; }
+  .greeting-text {
+    font-size: 15px; line-height: 2.2; color: var(--text-secondary);
+    font-weight: 300; max-width: 300px; margin: 0 auto; word-break: keep-all;
+  }
   .highlight { color: var(--sage-500); font-weight: 400; }
+  .greeting-text .accent { color: var(--sage-500); font-weight: 600; font-size: 1.2em; }
   .greeting-parents { margin-top: 36px; font-size: 13px; color: var(--text-light); line-height: 2; }
 
   /* === D-Day === */
@@ -526,7 +530,12 @@
     <!-- GREETING -->
     <section class="section greeting fade-in" id="greeting">
       <div class="section-divider"><span class="leaf-icon">☘️</span></div>
-      <img class="greeting-intro-img" src="greeting-intro.png" alt="초대합니다 - 클로버로 이어진 우리가 로드맵을 함께 만들며 걸어나가겠습니다 버팀목이 되어 함께 잘 살겠습니다">
+      <div class="section-label">초대합니다</div>
+      <p class="greeting-text">
+        <span class="accent">클</span>로버로 이어진 우리가<br>
+        <span class="accent">로</span>드맵을 함께 만들며 걸어나가겠습니다.<br>
+        <span class="accent">버</span>팀목이 되어 함께 잘 살겠습니다.
+      </p>
       <div class="greeting-parents">
         김대원 · 안민정 의 장남 <span class="highlight">인환</span><br>
         박도상 · 김은정 의 장녀 <span class="highlight">진희</span>
