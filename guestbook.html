@@ -52,23 +52,31 @@
   }
   .detail-modal.active, .edit-modal.active { display: flex; }
   .detail-letter {
-    background: var(--cream); border: 1.5px solid var(--sage-300); border-radius: 24px;
-    padding: 30px 26px 24px; max-width: 320px; width: 100%; position: relative;
-    text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.25); animation: pop 0.3s ease;
-    display: flex; flex-direction: column; align-items: center;
+    width: min(92vw, 400px); aspect-ratio: 1;
+    background: url('letter.png') center / contain no-repeat;
+    position: relative; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 19% 16% 23%;
+    animation: pop 0.3s ease;
   }
-  .detail-letter::before { content: '☘️'; display: block; font-size: 18px; margin-bottom: 12px; }
   @keyframes pop { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
   .detail-msg {
-    font-size: 14px; color: var(--text-primary); line-height: 1.9; text-align: center;
-    word-break: keep-all; white-space: pre-wrap; overflow-y: auto; max-height: 55vh; padding: 0 4px;
+    flex: 0 1 auto; min-height: 0; width: 100%;
+    font-size: 13.5px; color: var(--text-primary); line-height: 1.85; text-align: center;
+    word-break: keep-all; white-space: pre-wrap; overflow-y: auto; padding: 0 4px;
   }
-  .detail-from { margin-top: 16px; font-size: 12px; color: var(--text-secondary); }
-  .detail-date { font-size: 10px; color: var(--text-light); margin-top: 2px; letter-spacing: 0.5px; }
+  .detail-msg::-webkit-scrollbar { width: 3px; }
+  .detail-msg::-webkit-scrollbar-thumb { background: var(--sage-300); border-radius: 3px; }
+  .detail-from { flex-shrink: 0; margin-top: 12px; font-size: 12px; color: var(--text-secondary); }
+  .detail-date { flex-shrink: 0; font-size: 10px; color: var(--text-light); margin-top: 2px; letter-spacing: 0.5px; }
   .detail-edit {
-    margin-top: 14px; padding: 8px 20px; border-radius: 20px; border: 1px solid var(--border-light);
-    background: var(--soft-green-bg); color: var(--sage-600); font-size: 12px;
-    font-family: 'Noto Sans KR', sans-serif; cursor: pointer;
+    position: absolute; bottom: 17%; right: 15%; width: 32px; height: 32px; border-radius: 50%;
+    border: 1px solid var(--border-light); background: rgba(255,255,255,0.9); color: var(--sage-500);
+    font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .detail-close {
+    position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border-radius: 50%;
+    border: none; background: rgba(255,255,255,0.85); color: var(--sage-600); font-size: 16px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 2;
   }
 
   .modal-card {
@@ -114,11 +122,12 @@
 
 <!-- 편지 상세 -->
 <div class="detail-modal" id="detailModal" onclick="closeDetail()">
+  <button class="detail-close" onclick="closeDetail()">✕</button>
   <div class="detail-letter" onclick="event.stopPropagation()">
     <div class="detail-msg" id="detailMsg"></div>
     <div class="detail-from" id="detailFrom"></div>
     <div class="detail-date" id="detailDate"></div>
-    <button class="detail-edit" id="detailEditBtn" onclick="openEdit()">✏️ 수정하기</button>
+    <button class="detail-edit" id="detailEditBtn" onclick="openEdit()">✎</button>
   </div>
 </div>
 
@@ -190,7 +199,7 @@
     document.getElementById('detailMsg').textContent = current.message;
     document.getElementById('detailFrom').textContent = 'from. ' + current.name;
     document.getElementById('detailDate').textContent = current.date;
-    document.getElementById('detailEditBtn').style.display = current.id ? 'block' : 'none';
+    document.getElementById('detailEditBtn').style.display = current.id ? '' : 'none';
     document.getElementById('detailModal').classList.add('active');
   }
   function closeDetail() {
