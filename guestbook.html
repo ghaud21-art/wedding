@@ -52,23 +52,23 @@
   }
   .detail-modal.active, .edit-modal.active { display: flex; }
   .detail-letter {
-    width: min(88vw, 360px); aspect-ratio: 1;
-    background: url('letter.png') center / contain no-repeat;
-    position: relative; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; padding: 18% 16% 22%;
-    animation: pop 0.3s ease;
+    background: var(--cream); border: 1.5px solid var(--sage-300); border-radius: 24px;
+    padding: 30px 26px 24px; max-width: 320px; width: 100%; position: relative;
+    text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.25); animation: pop 0.3s ease;
+    display: flex; flex-direction: column; align-items: center;
   }
+  .detail-letter::before { content: '☘️'; display: block; font-size: 18px; margin-bottom: 12px; }
   @keyframes pop { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
   .detail-msg {
-    font-size: 13.5px; color: var(--text-primary); line-height: 1.8; text-align: center;
-    word-break: keep-all; overflow-y: auto; max-height: 100%;
+    font-size: 14px; color: var(--text-primary); line-height: 1.9; text-align: center;
+    word-break: keep-all; white-space: pre-wrap; overflow-y: auto; max-height: 55vh; padding: 0 4px;
   }
-  .detail-from { margin-top: 12px; font-size: 12px; color: var(--text-secondary); }
+  .detail-from { margin-top: 16px; font-size: 12px; color: var(--text-secondary); }
   .detail-date { font-size: 10px; color: var(--text-light); margin-top: 2px; letter-spacing: 0.5px; }
   .detail-edit {
-    position: absolute; bottom: 16%; right: 15%; width: 30px; height: 30px; border-radius: 50%;
-    border: 1px solid var(--border-light); background: rgba(255,255,255,0.9); color: var(--sage-500);
-    font-size: 13px; cursor: pointer;
+    margin-top: 14px; padding: 8px 20px; border-radius: 20px; border: 1px solid var(--border-light);
+    background: var(--soft-green-bg); color: var(--sage-600); font-size: 12px;
+    font-family: 'Noto Sans KR', sans-serif; cursor: pointer;
   }
 
   .modal-card {
@@ -118,7 +118,7 @@
     <div class="detail-msg" id="detailMsg"></div>
     <div class="detail-from" id="detailFrom"></div>
     <div class="detail-date" id="detailDate"></div>
-    <button class="detail-edit" id="detailEditBtn" onclick="openEdit()">✎</button>
+    <button class="detail-edit" id="detailEditBtn" onclick="openEdit()">✏️ 수정하기</button>
   </div>
 </div>
 
@@ -128,7 +128,7 @@
     <button class="modal-close" onclick="closeEdit()">✕</button>
     <div class="modal-title">✏️ 메시지 수정</div>
     <input type="text" class="inp" id="editName" placeholder="이름">
-    <textarea class="inp" id="editMessage" placeholder="메시지"></textarea>
+    <textarea class="inp" id="editMessage" maxlength="300" placeholder="메시지 (최대 300자)"></textarea>
     <input type="password" class="inp" id="editPassword" inputmode="numeric" maxlength="10" placeholder="작성 시 입력한 비밀번호">
     <button class="submit-btn" id="editSubmit" onclick="submitEdit()">수정하기</button>
   </div>

@@ -301,6 +301,25 @@
   .guestbook-more { width: 100%; margin-top: 16px; padding: 12px; border-radius: 12px; border: 1px solid var(--border-light); background: var(--cream); color: var(--sage-600); font-size: 13px; font-family: 'Noto Sans KR', sans-serif; cursor: pointer; transition: background 0.3s ease; }
   .guestbook-more:hover { background: var(--highlight-green); }
 
+  /* 방명록 편지 전체보기 모달 */
+  .gb-detail-card {
+    background: var(--cream); border: 1.5px solid var(--sage-300); border-radius: 24px;
+    padding: 30px 26px 24px; max-width: 320px; width: 100%; position: relative;
+    text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.25); animation: fadeUp 0.3s ease;
+  }
+  .gb-detail-card::before { content: '☘️'; display: block; font-size: 18px; margin-bottom: 12px; }
+  .gb-detail-msg {
+    font-size: 14px; color: var(--text-primary); line-height: 1.9; text-align: center;
+    word-break: keep-all; white-space: pre-wrap; overflow-y: auto; max-height: 55vh; padding: 0 4px;
+  }
+  .gb-detail-from { margin-top: 16px; font-size: 12px; color: var(--text-secondary); }
+  .gb-detail-date { font-size: 10px; color: var(--text-light); margin-top: 2px; letter-spacing: 0.5px; }
+  .gb-detail-editbtn {
+    margin-top: 14px; padding: 8px 20px; border-radius: 20px; border: 1px solid var(--border-light);
+    background: var(--soft-green-bg); color: var(--sage-600); font-size: 12px;
+    font-family: 'Noto Sans KR', sans-serif; cursor: pointer;
+  }
+
   /* 방명록 수정 모달 */
   .gb-modal {
     display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -557,13 +576,24 @@
   </div>
 </div>
 
+<!-- 방명록 편지 전체보기 모달 -->
+<div class="gb-modal" id="gbDetailModal" onclick="closeGbDetail()">
+  <div class="gb-detail-card" onclick="event.stopPropagation()">
+    <button class="gb-modal-close" onclick="closeGbDetail()">✕</button>
+    <div class="gb-detail-msg" id="gbDetailMsg"></div>
+    <div class="gb-detail-from" id="gbDetailFrom"></div>
+    <div class="gb-detail-date" id="gbDetailDate"></div>
+    <button class="gb-detail-editbtn" id="gbDetailEditBtn">✏️ 수정하기</button>
+  </div>
+</div>
+
 <!-- 방명록 수정 모달 -->
 <div class="gb-modal" id="gbEditModal" onclick="closeGbEdit()">
   <div class="gb-modal-card" onclick="event.stopPropagation()">
     <button class="gb-modal-close" onclick="closeGbEdit()">✕</button>
     <div class="gb-modal-title">✏️ 메시지 수정</div>
     <input type="text" class="guestbook-input" id="gbEditName" placeholder="이름">
-    <textarea class="guestbook-textarea" id="gbEditMessage" placeholder="메시지"></textarea>
+    <textarea class="guestbook-textarea" id="gbEditMessage" maxlength="300" placeholder="메시지 (최대 300자)"></textarea>
     <input type="password" class="guestbook-input" id="gbEditPassword" inputmode="numeric" maxlength="10" placeholder="작성 시 입력한 비밀번호">
     <button class="guestbook-submit" id="gbEditSubmit" onclick="submitGbEdit()">수정하기</button>
   </div>
@@ -696,7 +726,7 @@
       <div class="section-label">방명록</div>
       <div class="guestbook-form">
         <input type="text" class="guestbook-input" id="gbName" placeholder="이름">
-        <textarea class="guestbook-textarea" id="gbMessage" placeholder="축하 메시지를 남겨주세요 ☘️"></textarea>
+        <textarea class="guestbook-textarea" id="gbMessage" maxlength="300" placeholder="축하 메시지를 남겨주세요 ☘️ (최대 300자)"></textarea>
         <input type="password" class="guestbook-input" id="gbPassword" inputmode="numeric" maxlength="10" placeholder="수정용 비밀번호 (숫자 4자리 권장)">
         <button class="guestbook-submit" onclick="submitGuestbook()">등록하기</button>
       </div>
@@ -1007,14 +1037,33 @@
         gbEntries.forEach(function(entry, i) {
           var div = document.createElement('div');
           div.className = 'letter-card';
-          var editBtn = entry.id ? '<button class="letter-edit" onclick="openGbEdit(' + i + ')">✎</button>' : '';
+          var editBtn = entry.id ? '<button class="letter-edit" onclick="event.stopPropagation(); openGbEdit(' + i + ')">✎</button>' : '';
           div.innerHTML = '<div class="letter-msg">' + escapeHtml(entry.message) + '</div>' +
             '<div class="letter-from">from. ' + escapeHtml(entry.name) + '</div>' +
             '<div class="letter-date">' + escapeHtml(entry.date) + '</div>' + editBtn;
+          div.onclick = function() { openGbDetail(i); };
           container.appendChild(div);
         });
       })
       .catch(function() {});
+  }
+
+  // === 방명록 편지 전체보기 ===
+  function openGbDetail(i) {
+    var entry = gbEntries[i];
+    if (!entry) return;
+    document.getElementById('gbDetailMsg').textContent = entry.message;
+    document.getElementById('gbDetailFrom').textContent = 'from. ' + entry.name;
+    document.getElementById('gbDetailDate').textContent = entry.date;
+    var editBtn = document.getElementById('gbDetailEditBtn');
+    editBtn.style.display = entry.id ? '' : 'none';
+    editBtn.onclick = function() { closeGbDetail(); openGbEdit(i); };
+    document.getElementById('gbDetailModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeGbDetail() {
+    document.getElementById('gbDetailModal').classList.remove('active');
+    document.body.style.overflow = '';
   }
 
   // === 방명록 수정 ===
