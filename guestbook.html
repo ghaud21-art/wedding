@@ -29,11 +29,12 @@
 
   .grid { display: flex; flex-direction: column; align-items: center; gap: 8px; }
   .letter-card {
-    width: min(84vw, 330px); aspect-ratio: 1;
+    width: min(84vw, 330px); height: min(84vw, 330px);
     background: url('letter.png') center / contain no-repeat;
     position: relative; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; padding: 20% 17% 24%;
-    cursor: pointer;
+    align-items: center; justify-content: center;
+    padding: calc(min(84vw, 330px) * 0.20) calc(min(84vw, 330px) * 0.17) calc(min(84vw, 330px) * 0.24);
+    overflow: hidden; cursor: pointer;
   }
   .letter-msg {
     font-size: 13px; color: var(--text-primary); line-height: 1.75; text-align: center;
@@ -52,11 +53,12 @@
   }
   .detail-modal.active, .edit-modal.active { display: flex; }
   .detail-letter {
-    width: min(92vw, 400px); aspect-ratio: 1;
+    width: min(92vw, 400px); height: min(92vw, 400px);
     background: url('letter.png') center / contain no-repeat;
     position: relative; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; padding: 19% 16% 23%;
-    animation: pop 0.3s ease;
+    align-items: center; justify-content: center;
+    padding: calc(min(92vw, 400px) * 0.19) calc(min(92vw, 400px) * 0.16) calc(min(92vw, 400px) * 0.23);
+    overflow: hidden; animation: pop 0.3s ease;
   }
   @keyframes pop { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
   .detail-msg {
