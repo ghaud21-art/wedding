@@ -530,9 +530,13 @@
   }
   .clover-modal-title { font-size: 16px; font-weight: 500; color: var(--text-primary); line-height: 1.7; margin-bottom: 8px; }
   .clover-modal-sub { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 24px; }
-  .clover-modal-img { width: 130px; height: 130px; object-fit: contain; cursor: pointer; transition: transform 0.3s ease; }
-  .clover-modal-img:hover { transform: scale(1.08) rotate(-4deg); }
-  .clover-modal-hint { font-size: 11px; color: var(--text-light); margin-top: 14px; letter-spacing: 0.3px; }
+  .clover-modal-img { width: 100px; height: 100px; object-fit: contain; margin-bottom: 6px; }
+  .clover-modal-hint { font-size: 11px; color: var(--text-light); margin-top: 12px; letter-spacing: 0.3px; line-height: 1.5; }
+  .wish-result-img { width: 100%; max-width: 230px; border-radius: 16px; box-shadow: 0 8px 28px rgba(79,170,58,0.18); margin-bottom: 14px; display: block; margin-left: auto; margin-right: auto; }
+  .wish-actions { display: flex; gap: 8px; }
+  .wish-actions button { flex: 1; padding: 12px 8px; border-radius: 12px; border: none; font-size: 13px; font-family: 'Noto Sans KR', sans-serif; font-weight: 500; cursor: pointer; }
+  .wish-save { background: var(--sage-400); color: white; }
+  .wish-kakao { background: #FEE500; color: #191919; }
 
   /* === Animations === */
   @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
@@ -582,10 +586,21 @@
 <div class="clover-modal" id="cloverModal" onclick="closeCloverModal()">
   <div class="clover-modal-card" onclick="event.stopPropagation()">
     <button class="clover-modal-close" onclick="closeCloverModal()">✕</button>
-    <div class="clover-modal-title">🍀 당신은 행운의<br>네잎클로버를 발견했습니다!</div>
-    <div class="clover-modal-sub">행운을 주변 사람과 함께<br>나누어보세요!</div>
-    <img class="clover-modal-img" src="clover.png" alt="네잎클로버" onclick="closeCloverModal(); shareKakao();">
-    <div class="clover-modal-hint">클로버를 누르면 카카오톡으로 청첩장이 공유돼요</div>
+    <div id="cloverStep1">
+      <div class="clover-modal-title">🍀 당신은 행운의<br>네잎클로버를 발견했습니다!</div>
+      <img class="clover-modal-img" src="clover.png" alt="네잎클로버">
+      <div class="clover-modal-sub" style="margin-bottom:12px;">소원을 입력하세요!</div>
+      <input type="text" class="guestbook-input" id="wishInput" maxlength="40" placeholder="예) 우리 가족 모두 건강하게!">
+      <button class="guestbook-submit" id="wishBtn" onclick="makeWish()">소원빌기 🍀</button>
+    </div>
+    <div id="cloverStep2" style="display:none;">
+      <img id="wishResultImg" class="wish-result-img" alt="소원 카드">
+      <div class="wish-actions">
+        <button class="wish-save" onclick="saveWishImage()">이미지 저장</button>
+        <button class="wish-kakao" onclick="shareWishKakao()">카카오톡 공유</button>
+      </div>
+      <div class="clover-modal-hint">저장한 이미지로 행운을 나눠보세요 🍀</div>
+    </div>
   </div>
 </div>
 
@@ -1387,12 +1402,151 @@
 
   // === 행운의 네잎클로버 (히어로 사진 더블클릭) ===
   function openCloverModal() {
+    document.getElementById('cloverStep1').style.display = '';
+    document.getElementById('cloverStep2').style.display = 'none';
+    document.getElementById('wishInput').value = '';
     document.getElementById('cloverModal').classList.add('active');
     document.body.style.overflow = 'hidden';
   }
   function closeCloverModal() {
     document.getElementById('cloverModal').classList.remove('active');
     document.body.style.overflow = '';
+  }
+
+  // --- 소원 카드 이미지 생성 ---
+  var wishCanvas = null;
+
+  function makeWish() {
+    var wish = document.getElementById('wishInput').value.trim();
+    if (!wish) { showToast('소원을 입력해주세요 🍀'); return; }
+    var btn = document.getElementById('wishBtn');
+    btn.disabled = true; btn.textContent = '소원 비는 중...';
+    renderWishCard(wish).then(function(canvas) {
+      wishCanvas = canvas;
+      document.getElementById('wishResultImg').src = canvas.toDataURL('image/png');
+      document.getElementById('cloverStep1').style.display = 'none';
+      document.getElementById('cloverStep2').style.display = '';
+      btn.disabled = false; btn.textContent = '소원빌기 🍀';
+    });
+  }
+
+  function roundRectPath(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
+    var chars = text.split(''), line = '', lines = [];
+    for (var i = 0; i < chars.length; i++) {
+      var test = line + chars[i];
+      if (ctx.measureText(test).width > maxWidth && line) { lines.push(line); line = chars[i]; }
+      else line = test;
+    }
+    if (line) lines.push(line);
+    lines.forEach(function(l, i) { ctx.fillText(l, x, y + i * lineHeight); });
+    return lines.length;
+  }
+
+  function renderWishCard(wish) {
+    return new Promise(function(resolve) {
+      var W = 720, H = 960;
+      var c = document.createElement('canvas');
+      c.width = W; c.height = H;
+      var ctx = c.getContext('2d');
+
+      var g = ctx.createLinearGradient(0, 0, 0, H);
+      g.addColorStop(0, '#edfce8'); g.addColorStop(0.6, '#fffefa'); g.addColorStop(1, '#fef8f0');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+
+      ctx.strokeStyle = 'rgba(110,192,92,0.55)'; ctx.lineWidth = 4;
+      roundRectPath(ctx, 28, 28, W - 56, H - 56, 36); ctx.stroke();
+      ctx.strokeStyle = 'rgba(110,192,92,0.3)'; ctx.lineWidth = 2;
+      roundRectPath(ctx, 42, 42, W - 84, H - 84, 28); ctx.stroke();
+
+      var img = new Image();
+      img.onload = draw; img.onerror = draw;
+      img.src = 'clover.png';
+
+      function draw() {
+        var ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+        ready.then(function() {
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+
+          ctx.fillStyle = '#4faa3a';
+          ctx.font = '500 28px "Noto Sans KR", sans-serif';
+          ctx.fillText('☘  행운의 네잎클로버  ☘', W / 2, 118);
+
+          if (img.naturalWidth) { var s = 340; ctx.drawImage(img, (W - s) / 2, 160, s, s); }
+
+          ctx.fillStyle = '#2d3a2e';
+          ctx.font = '500 38px "Noto Sans KR", sans-serif';
+          ctx.fillText('당신의 소원은', W / 2, 580);
+          ctx.fillText('반드시 이루어집니다', W / 2, 634);
+
+          ctx.fillStyle = '#3d8a2e';
+          ctx.font = '400 26px "Noto Sans KR", sans-serif';
+          wrapCanvasText(ctx, '“ ' + wish + ' ”', W / 2, 730, W - 180, 40);
+
+          ctx.fillStyle = '#93ad95';
+          ctx.font = '300 20px "Noto Sans KR", sans-serif';
+          ctx.fillText('인환 ♥ 진희  ·  2027. 02. 27', W / 2, 886);
+
+          resolve(c);
+        });
+      }
+    });
+  }
+
+  function wishCanvasToFile(cb) {
+    wishCanvas.toBlob(function(blob) {
+      cb(new File([blob], 'lucky-clover.png', { type: 'image/png' }));
+    }, 'image/png');
+  }
+
+  function saveWishImage() {
+    if (!wishCanvas) return;
+    wishCanvasToFile(function(file) {
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: '행운의 네잎클로버' }).catch(function() {});
+      } else {
+        var a = document.createElement('a');
+        a.href = wishCanvas.toDataURL('image/png');
+        a.download = 'lucky-clover.png';
+        document.body.appendChild(a); a.click(); a.remove();
+        showToast('이미지가 저장되었습니다 🍀');
+      }
+    });
+  }
+
+  function shareWishKakao() {
+    if (!wishCanvas) return;
+    if (typeof Kakao === 'undefined') { showToast('카카오 SDK를 불러오지 못했습니다'); return; }
+    if (!Kakao.isInitialized()) initKakaoSDK();
+    showToast('이미지 준비 중...');
+    wishCanvasToFile(function(file) {
+      Kakao.Share.uploadImage({ file: [file] })
+        .then(function(res) {
+          var url = res.infos.original.url;
+          Kakao.Share.sendDefault({
+            objectType: 'feed',
+            content: {
+              title: '🍀 행운의 네잎클로버를 발견했어요!',
+              description: '당신의 소원은 반드시 이루어집니다',
+              imageUrl: url, imageWidth: 720, imageHeight: 960,
+              link: { mobileWebUrl: SITE_URL, webUrl: SITE_URL }
+            },
+            buttons: [{ title: '청첩장 보기', link: { mobileWebUrl: SITE_URL, webUrl: SITE_URL } }]
+          });
+        })
+        .catch(function() {
+          showToast('이미지 공유에 실패했어요. 이미지 저장 후 직접 공유해주세요');
+        });
+    });
   }
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeCloverModal();
